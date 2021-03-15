@@ -1,5 +1,5 @@
-CREATE TABLE IF NOT EXISTS talk (
-    id int primary key,
+create table IF not exists talk (
+    id int auto_increment primary key,
     conference_id int not null,
     talk_name varchar(250) not null,
     talk_description varchar(250) not null,

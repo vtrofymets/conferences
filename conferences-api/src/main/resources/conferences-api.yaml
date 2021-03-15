@@ -125,6 +125,9 @@ components:
     Conference:
       type: object
       properties:
+        confId:
+          type: integer
+          format: int32
         confName:
           $ref: '#/components/schemas/nonEmptyString'
         confTopic:
@@ -133,7 +136,6 @@ components:
           type: string
           nullable: false
           minLength: 1
-          format: date
           pattern: '(\d{4})-(\d{2})-(\d{2})'
         participants:
           type: integer
@@ -157,7 +159,6 @@ components:
         TalkType:
           type: string
           nullable: false
-          minLength: 1
           enum:
             - REPORT
             - MASTER_CLASS

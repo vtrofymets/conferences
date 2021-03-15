@@ -4,6 +4,7 @@ import conferences.api.dto.Conference;
 import conferences.domain.ConferenceEntity;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.function.BiFunction;
 
 @Component
@@ -15,7 +16,7 @@ public class ConferencesProvider implements BiFunction<Integer, Conference, Conf
                 .id(integer)
                 .conferenceName(conference.getConfName())
                 .conferenceTopic(conference.getConfTopic())
-                .conferenceDate(conference.getConfDate())
+                .conferenceDate(LocalDate.parse(conference.getConfDate()))
                 .participants(conference.getParticipants())
                 .build();
     }

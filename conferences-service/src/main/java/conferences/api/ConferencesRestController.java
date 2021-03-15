@@ -30,6 +30,7 @@ public class ConferencesRestController implements ConferencesApi {
 
     @Override
     public ResponseEntity<Void> updateConference(@Min(1) Integer conferenceId, @Valid Conference body) {
+        conferencesService.updateConference(conferenceId, body);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

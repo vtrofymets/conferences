@@ -5,12 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.threeten.bp.LocalDate;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.time.LocalDate;
 
 
 @Entity
@@ -18,11 +15,12 @@ import javax.persistence.Id;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Table(name = "conference")
 public class ConferenceEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     private String conferenceName;
     private String conferenceTopic;
     private LocalDate conferenceDate;
@@ -30,9 +28,10 @@ public class ConferenceEntity {
 
     public static Conference to(ConferenceEntity entity) {
         Conference conference = new Conference();
+        conference.confId(entity.getId());
         conference.confName(entity.getConferenceName());
         conference.setConfTopic(entity.getConferenceTopic());
-        conference.setConfDate(entity.getConferenceDate());
+        conference.setConfDate(entity.getConferenceDate().toString());
         conference.setParticipants(entity.getParticipants());
         return conference;
     }
