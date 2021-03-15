@@ -1,0 +1,178 @@
+openapi: 3.0.0
+info:
+  description: Conferences Service
+  version: FINAL
+  title: Conferences API
+tags:
+  - name: conferences
+  - name: talks
+paths:
+  /conferences:
+    post:
+      description: Add conference.
+      tags:
+        - conferences
+      operationId: addConference
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Conference'
+        required: true
+      responses:
+        '201':
+          description: Added conference
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int32
+        '400':
+          description: Bad Request
+    get:
+      description: Retrieve all available conferences.
+      tags:
+        - conferences
+      operationId: allConferences
+      responses:
+        '200':
+          description: List of conferences.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Conference'
+  /conferences/{conferenceId}:
+    put:
+      description: Retrieve conference by conferenceId.
+      tags:
+        - conferences
+      operationId: updateConference
+      parameters:
+        - name: conferenceId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+            nullable: false
+            minimum: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Conference'
+        required: true
+      responses:
+        204:
+          description: Conferences.
+        400:
+          description: Bad Request
+        404:
+          description: NOT FOUND
+  /conferences/{conferenceId}/talks:
+    post:
+      description: Add new talk.
+      tags:
+        - talks
+      operationId: addTalk
+      parameters:
+        - name: conferenceId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            nullable: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Talk'
+        required: true
+      responses:
+        201:
+          description: Added new talk.
+    get:
+      description: List of talks by conferenceId.
+      tags:
+        - talks
+      operationId: retrieveTalksByConferenceId
+      parameters:
+        - name: conferenceId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+            nullable: false
+            minimum: 1
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Talk'
+        404:
+          description: NOT FOUND
+components:
+  schemas:
+    Conference:
+      type: object
+      properties:
+        confName:
+          $ref: '#/components/schemas/nonEmptyString'
+        confTopic:
+          $ref: '#/components/schemas/nonEmptyString'
+        confDate:
+          type: string
+          nullable: false
+          minLength: 1
+          format: date
+          pattern: '(\d{4})-(\d{2})-(\d{2})'
+        participants:
+          type: integer
+          format: int32
+          nullable: false
+          minimum: 101
+      required:
+        - confName
+        - confTopic
+        - confDate
+        - participants
+    Talk:
+      type: object
+      properties:
+        talkName:
+          $ref: '#/components/schemas/nonEmptyString'
+        talkDescription:
+          $ref: '#/components/schemas/nonEmptyString'
+        speaker:
+          $ref: '#/components/schemas/nonEmptyString'
+        TalkType:
+          type: string
+          nullable: false
+          minLength: 1
+          enum:
+            - REPORT
+            - MASTER_CLASS
+            - WORKSHOP
+      required:
+        - talkName
+        - talkDescription
+        - speaker
+        - TalkType
+    nonEmptyString:
+      type: string
+      nullable: false
+      minLength: 1
+    nonEmptyInteger:
+      type: integer
+      format: int32
+      nullable: false
+      minimum: 1
