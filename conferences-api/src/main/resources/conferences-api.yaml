@@ -17,7 +17,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Conference'
+              $ref: '#/components/schemas/ConferenceDto'
         required: true
       responses:
         '201':
@@ -42,7 +42,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Conference'
+                  $ref: '#/components/schemas/ConferenceDto'
   /conferences/{conferenceId}:
     put:
       description: Retrieve conference by conferenceId.
@@ -62,7 +62,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Conference'
+              $ref: '#/components/schemas/ConferenceDto'
         required: true
       responses:
         204:
@@ -90,7 +90,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Talk'
+              $ref: '#/components/schemas/TalkDto'
         required: true
       responses:
         201:
@@ -117,22 +117,27 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Talk'
+                  $ref: '#/components/schemas/TalkDto'
         404:
           description: NOT FOUND
 components:
   schemas:
-    Conference:
+    ConferenceDto:
       type: object
       properties:
-        confId:
+        id:
           type: integer
           format: int32
-        confName:
+        name:
           $ref: '#/components/schemas/nonEmptyString'
-        confTopic:
+        topic:
           $ref: '#/components/schemas/nonEmptyString'
-        confDate:
+        dateStart:
+          type: string
+          nullable: false
+          minLength: 1
+          pattern: '(\d{4})-(\d{2})-(\d{2})'
+        dateEnd:
           type: string
           nullable: false
           minLength: 1
@@ -143,20 +148,21 @@ components:
           nullable: false
           minimum: 101
       required:
-        - confName
-        - confTopic
-        - confDate
+        - name
+        - topic
+        - dateStart
+        - dateEnd
         - participants
-    Talk:
+    TalkDto:
       type: object
       properties:
-        talkName:
+        title:
           $ref: '#/components/schemas/nonEmptyString'
-        talkDescription:
+        description:
           $ref: '#/components/schemas/nonEmptyString'
         speaker:
           $ref: '#/components/schemas/nonEmptyString'
-        TalkType:
+        talkType:
           type: string
           nullable: false
           enum:
@@ -164,10 +170,10 @@ components:
             - MASTER_CLASS
             - WORKSHOP
       required:
-        - talkName
-        - talkDescription
+        - title
+        - description
         - speaker
-        - TalkType
+        - talkType
     nonEmptyString:
       type: string
       nullable: false

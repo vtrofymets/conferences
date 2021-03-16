@@ -1,15 +1,15 @@
 package conferences.dao;
 
-import conferences.domain.TalkEntity;
+import conferences.domain.Talk;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface TalksDao extends JpaRepository<TalkEntity, Integer> {
+public interface TalksDao extends JpaRepository<Talk, Integer> {
 
-    List<TalkEntity> findByConferenceId(final Integer id);
+    List<Talk> findByConferenceId(final Integer id);
 
-    List<TalkEntity> findBySpeaker(final String speaker);
+    List<Talk> findBySpeaker(final String speaker);
 }

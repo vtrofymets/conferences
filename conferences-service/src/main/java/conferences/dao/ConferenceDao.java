@@ -1,14 +1,14 @@
 package conferences.dao;
 
-import conferences.domain.ConferenceEntity;
+import conferences.domain.Conference;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface ConferenceDao extends JpaRepository<ConferenceEntity, Integer> {
-    Optional<ConferenceEntity> findByConferenceName(final String name);
+public interface ConferenceDao extends JpaRepository<Conference, Integer> {
+    Optional<Conference> findByConferenceName(final String name);
 
-    Optional<ConferenceEntity> findByConferenceDate(final String name);
+    boolean findByConferenceDate(final String name);
 }

@@ -1,22 +1,22 @@
 package conferences.providers;
 
-import conferences.api.dto.Talk;
-import conferences.domain.TalkEntity;
+import conferences.api.dto.TalkDto;
+import conferences.domain.Talk;
 import org.springframework.stereotype.Component;
 
 import java.util.function.BiFunction;
 
 @Component
-public class TalksProvider implements BiFunction<Integer, Talk, TalkEntity> {
+public class TalksProvider implements BiFunction<Integer, TalkDto, Talk> {
 
     @Override
-    public TalkEntity apply(Integer conferenceId, Talk talk) {
-        return TalkEntity.builder()
+    public Talk apply(Integer conferenceId, TalkDto talk) {
+        return Talk.builder()
                 .conferenceId(conferenceId)
-                .talkName(talk.getTalkName())
-                .talkDescription(talk.getTalkDescription())
+                .title(talk.getTitle())
+                .description(talk.getDescription())
                 .speaker(talk.getSpeaker())
-                .talkType(talk.getTalkType().name())
+                .type(talk.getTalkType().name())
                 .build();
     }
 }

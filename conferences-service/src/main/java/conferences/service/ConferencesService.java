@@ -1,14 +1,14 @@
 package conferences.service;
 
-import conferences.api.dto.Conference;
+import conferences.api.dto.ConferenceDto;
 
 import java.util.List;
 
 public interface ConferencesService {
 
-    int addNewConference(Conference conference);
+    int addNewConference(ConferenceDto conference);
 
-    List<Conference> receiveAllConferences();
+    List<ConferenceDto> receiveAllConferences();
 
-    void updateConference(Integer conferenceId, Conference conference);
+    void updateConference(Integer conferenceId, ConferenceDto conference);
 }

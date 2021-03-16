@@ -1,12 +1,12 @@
 package conferences.service;
 
-import conferences.api.dto.Talk;
+import conferences.api.dto.TalkDto;
 
 import java.util.List;
 
 public interface TalksService {
 
-    void addNewTalkToConference(Integer conferenceId, Talk talk);
+    void addNewTalkToConference(Integer conferenceId, TalkDto talk);
 
-    List<Talk> receiveAllTalksByConferenceId(Integer id);
+    List<TalkDto> receiveAllTalksByConferenceId(Integer id);
 }
