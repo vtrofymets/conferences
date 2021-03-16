@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ConferencesExceptionController {
 
     @ExceptionHandler(ConferenceException.class)
-    public ResponseEntity<String> handleConferenceNotFound(ConferenceException ex) {
+    public ResponseEntity<String> handleConference(ConferenceException ex) {
         return new ResponseEntity<>(ex.getMessage(), ex.getStatus());
     }
 }
