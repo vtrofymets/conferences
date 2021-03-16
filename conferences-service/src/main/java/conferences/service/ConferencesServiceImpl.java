@@ -7,6 +7,7 @@ import conferences.exceptions.ConferenceException;
 import conferences.providers.ConferencesProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,10 @@ public class ConferencesServiceImpl implements ConferencesService {
     @Transactional
     public int addNewConference(Conference conference) {
         log.info("Add Conference Body Request{}", conference);
+        if (conferenceDao.findByConferenceName(conference.getConfName()).isPresent()) {
+            throw new ConferenceException("Conference With Name " + conference.getConfName() + " Already Exist!",
+                    HttpStatus.CONFLICT);
+        }
         var conferenceEntity = provider.apply(null, conference);
         return conferenceDao.save(conferenceEntity).getId();
     }
@@ -41,7 +46,7 @@ public class ConferencesServiceImpl implements ConferencesService {
     public void updateConference(Integer conferenceId, Conference conference) {
         log.info("Update Conference By conferenceId{}, body{}", conferenceId, conference);
         var entity = conferenceDao.findById(conferenceId)
-                .orElseThrow(() -> new ConferenceException("Conference With Id " + conferenceId + " Not Found"));
+                .orElseThrow(() -> new ConferenceException("Conference With Id " + conferenceId + " Not Found", HttpStatus.NOT_FOUND));
         var conferenceEntity = provider.apply(entity.getId(), conference);
         conferenceDao.save(conferenceEntity);
     }
