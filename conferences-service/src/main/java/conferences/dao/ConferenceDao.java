@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface ConferenceDao extends JpaRepository<ConferenceEntity, Integer> {
     Optional<ConferenceEntity> findByConferenceName(final String name);
+
+    Optional<ConferenceEntity> findByConferenceDate(final String name);
 }

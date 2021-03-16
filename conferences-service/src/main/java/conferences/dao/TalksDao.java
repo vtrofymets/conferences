@@ -10,4 +10,6 @@ import java.util.List;
 public interface TalksDao extends JpaRepository<TalkEntity, Integer> {
 
     List<TalkEntity> findByConferenceId(final Integer id);
+
+    List<TalkEntity> findBySpeaker(final String speaker);
 }

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -30,6 +31,9 @@ public class ConferencesServiceImpl implements ConferencesService {
         if (conferenceDao.findByConferenceName(conference.getConfName()).isPresent()) {
             throw new ConferenceException("Conference With Name " + conference.getConfName() + " Already Exist!",
                     HttpStatus.CONFLICT);
+        } else if (conferenceDao.findByConferenceDate(conference.getConfDate()).isPresent()) {
+            throw new ConferenceException("Conference On Date " + conference.getConfDate() + " Already Exist!",
+                    HttpStatus.BAD_REQUEST);
         }
         var conferenceEntity = provider.apply(null, conference);
         return conferenceDao.save(conferenceEntity).getId();
@@ -46,7 +50,8 @@ public class ConferencesServiceImpl implements ConferencesService {
     public void updateConference(Integer conferenceId, Conference conference) {
         log.info("Update Conference By conferenceId{}, body{}", conferenceId, conference);
         var entity = conferenceDao.findById(conferenceId)
-                .orElseThrow(() -> new ConferenceException("Conference With Id " + conferenceId + " Not Found", HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new ConferenceException("Conference With Id " + conferenceId + " Not Found",
+                        HttpStatus.NOT_FOUND));
         var conferenceEntity = provider.apply(entity.getId(), conference);
         conferenceDao.save(conferenceEntity);
     }
