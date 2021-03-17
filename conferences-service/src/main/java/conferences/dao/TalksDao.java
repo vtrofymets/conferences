@@ -11,7 +11,7 @@ public interface TalksDao extends JpaRepository<Talk, Integer> {
 
     List<Talk> findByConferenceId(final Integer id);
 
-    boolean existsByTitle(final String id);
+    boolean existsByConferenceIdAndTitle(final Integer id, final String title);
 
-    List<Talk> findBySpeaker(final String speaker);
+    List<Talk> findByConferenceIdAndSpeaker(final Integer id, final String speaker);
 }

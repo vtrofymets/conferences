@@ -31,12 +31,12 @@ public class TalksServiceImpl implements TalksService {
     @Transactional
     public void addNewTalkToConference(Integer conferenceId, TalkRequest talk) {
         log.info("Add New Talk By CondId{} and Body{}", conferenceId, talk);
-        if (talksDao.findBySpeaker(talk.getSpeaker()).size() == 3) {
+        if (talksDao.findByConferenceIdAndSpeaker(conferenceId, talk.getSpeaker()).size() == 3) {
             throw new TalkException("3 Talks Limit", HttpStatus.CONFLICT);
-        } else if(talksDao.existsByTitle(talk.getTitle())) {
+        } else if (talksDao.existsByConferenceIdAndTitle(conferenceId, talk.getTitle())) {
             throw new TalkException("Title already exist", HttpStatus.CONFLICT);
         } else if (conferenceDao.findById(conferenceId)
-                .filter(e -> ChronoUnit.DAYS.between(e.getDateStart(), LocalDate.now()) < 30)
+                .filter(e -> ChronoUnit.DAYS.between(LocalDate.now(), e.getDateStart()) < 30)
                 .isPresent()) {
             throw new TalkException("The Talk can be submitted 30 days in advance!", HttpStatus.BAD_REQUEST);
         }
@@ -47,6 +47,6 @@ public class TalksServiceImpl implements TalksService {
     @Override
     @Transactional(readOnly = true)
     public List<TalkResponse> receiveAllTalksByConferenceId(Integer id) {
-        return talksDao.findByConferenceId(id).stream().map(Talk::to).collect(Collectors.toList());
+        return talksDao.findByConferenceId(id).stream().map(e -> Talk.to(id, e)).collect(Collectors.toList());
     }
 }

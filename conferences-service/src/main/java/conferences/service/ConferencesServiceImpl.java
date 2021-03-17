@@ -26,15 +26,15 @@ public class ConferencesServiceImpl implements ConferencesService {
     @Override
     @Transactional
     public int addNewConference(ConferenceRequest conference) {
-        log.info("Add Conference Body Request{}", conference);
-        if (conferenceDao.findByName(conference.getName()).isPresent()) {
+        var conferenceEntity = provider.apply(null, conference);
+        log.info("Entity is{}", conferenceEntity);
+        if (conferenceDao.findByName(conferenceEntity.getName()).isPresent()) {
             throw new ConferenceException("Conference With Name " + conference.getName() + " Already Exist!",
                     HttpStatus.CONFLICT);
-        } else if (conferenceDao.existDates(conference.getDateStart(), conference.getDateEnd()).isPresent()) {
-            throw new ConferenceException("Conference On Date " + conference.getDateStart() + " Already Exist!",
+        } else if (conferenceDao.checkOnExistPeriod(conferenceEntity.getDateStart(), conferenceEntity.getDateEnd()) > 0) {
+            throw new ConferenceException("Cant add Conference On this Dates!",
                     HttpStatus.BAD_REQUEST);
         }
-        var conferenceEntity = provider.apply(null, conference);
         return conferenceDao.save(conferenceEntity).getId();
     }
 
@@ -47,7 +47,6 @@ public class ConferencesServiceImpl implements ConferencesService {
     @Override
     @Transactional
     public void updateConference(Integer conferenceId, ConferenceRequest conference) {
-        log.info("Update Conference By conferenceId{}, body{}", conferenceId, conference);
         var entity = conferenceDao.findById(conferenceId)
                 .orElseThrow(() -> new ConferenceException("Conference With Id " + conferenceId + " Not Found",
                         HttpStatus.NOT_FOUND));

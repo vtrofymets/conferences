@@ -203,7 +203,10 @@ components:
       type: object
       properties:
         conferenceId:
-          $ref: '#/components/schemas/nonEmptyString'
+          type: integer
+          format: int32
+          nullable: false
+          minimum: 1
         title:
           $ref: '#/components/schemas/nonEmptyString'
         description:

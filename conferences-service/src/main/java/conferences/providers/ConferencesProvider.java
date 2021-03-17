@@ -17,7 +17,7 @@ public class ConferencesProvider implements BiFunction<Integer, ConferenceReques
                 .name(conference.getName())
                 .topic(conference.getTopic())
                 .dateStart(LocalDate.parse(conference.getDateStart()))
-                .dateStart(LocalDate.parse(conference.getDateEnd()))
+                .dateEnd(LocalDate.parse(conference.getDateEnd()))
                 .participants(conference.getParticipants())
                 .build();
     }

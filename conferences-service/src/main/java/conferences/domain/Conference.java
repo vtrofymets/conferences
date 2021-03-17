@@ -37,4 +37,9 @@ public class Conference {
                 .dateEnd(entity.getDateEnd().toString())
                 .participants(entity.getParticipants());
     }
+
+    @Override
+    public String toString() {
+        return "Conference{name='" + name + '\'' + ", topic='" + topic + '\'' + ", dateStart=" + dateStart + ", dateEnd=" + dateEnd + ", participants=" + participants + '}';
+    }
 }
