@@ -1,7 +1,8 @@
 package conferences.api;
 
 
-import conferences.api.dto.TalkDto;
+import conferences.api.dto.TalkRequest;
+import conferences.api.dto.TalkResponse;
 import conferences.service.TalksService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,13 +20,13 @@ public class TalksRestController implements TalksApi {
     private final TalksService talksService;
 
     @Override
-    public ResponseEntity<Void> addTalk(@Min(1) Integer conferenceId, @Valid TalkDto body) {
+    public ResponseEntity<Void> addTalk(@Min(1) Integer conferenceId, @Valid TalkRequest body) {
         talksService.addNewTalkToConference(conferenceId, body);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @Override
-    public ResponseEntity<List<TalkDto>> retrieveTalksByConferenceId(@Min(1) Integer conferenceId) {
+    public ResponseEntity<List<TalkResponse>> retrieveTalksByConferenceId(@Min(1) Integer conferenceId) {
         return new ResponseEntity<>(talksService.receiveAllTalksByConferenceId(conferenceId), HttpStatus.OK);
     }
 }

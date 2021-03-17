@@ -1,12 +1,15 @@
 package conferences.domain;
 
-import conferences.api.dto.ConferenceDto;
+import conferences.api.dto.ConferenceResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.time.LocalDate;
 
 
@@ -26,8 +29,8 @@ public class Conference {
     private LocalDate dateEnd;
     private int participants;
 
-    public static ConferenceDto to(Conference entity) {
-        return new ConferenceDto().id(entity.getId())
+    public static ConferenceResponse to(Conference entity) {
+        return new ConferenceResponse().id(entity.getId())
                 .name(entity.getName())
                 .topic(entity.getTopic())
                 .dateStart(entity.getDateStart().toString())

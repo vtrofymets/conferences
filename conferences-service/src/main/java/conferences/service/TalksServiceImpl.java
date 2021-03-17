@@ -1,6 +1,7 @@
 package conferences.service;
 
-import conferences.api.dto.TalkDto;
+import conferences.api.dto.TalkRequest;
+import conferences.api.dto.TalkResponse;
 import conferences.dao.ConferenceDao;
 import conferences.dao.TalksDao;
 import conferences.domain.Talk;
@@ -28,7 +29,7 @@ public class TalksServiceImpl implements TalksService {
 
     @Override
     @Transactional
-    public void addNewTalkToConference(Integer conferenceId, TalkDto talk) {
+    public void addNewTalkToConference(Integer conferenceId, TalkRequest talk) {
         log.info("Add New Talk By CondId{} and Body{}", conferenceId, talk);
         if (talksDao.findBySpeaker(talk.getSpeaker()).size() == 3) {
             throw new TalkException("3 Talks Limit", HttpStatus.CONFLICT);
@@ -43,7 +44,7 @@ public class TalksServiceImpl implements TalksService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<TalkDto> receiveAllTalksByConferenceId(Integer id) {
+    public List<TalkResponse> receiveAllTalksByConferenceId(Integer id) {
         return talksDao.findByConferenceId(id).stream().map(Talk::to).collect(Collectors.toList());
     }
 }

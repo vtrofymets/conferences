@@ -1,12 +1,16 @@
 package conferences.domain;
 
-import conferences.api.dto.TalkDto;
+import conferences.api.dto.TalkResponse;
+import conferences.api.dto.TalkType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
 @Builder
@@ -24,11 +28,11 @@ public class Talk {
     private String speaker;
     private String type;
 
-    public static TalkDto to(Talk entity) {
-        return new TalkDto().title(entity.getTitle())
+    public static TalkResponse to(Talk entity) {
+        return new TalkResponse().title(entity.getTitle())
                 .description(entity.getDescription())
                 .speaker(entity.getSpeaker())
-                .talkType(TalkDto.TalkTypeEnum.fromValue(entity.getType()));
+                .talkType(TalkType.fromValue(entity.getType()));
     }
 
 }

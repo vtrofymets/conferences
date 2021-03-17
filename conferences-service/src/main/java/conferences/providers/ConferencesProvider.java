@@ -1,6 +1,6 @@
 package conferences.providers;
 
-import conferences.api.dto.ConferenceDto;
+import conferences.api.dto.ConferenceRequest;
 import conferences.domain.Conference;
 import org.springframework.stereotype.Component;
 
@@ -8,10 +8,10 @@ import java.time.LocalDate;
 import java.util.function.BiFunction;
 
 @Component
-public class ConferencesProvider implements BiFunction<Integer, ConferenceDto, Conference> {
+public class ConferencesProvider implements BiFunction<Integer, ConferenceRequest, Conference> {
 
     @Override
-    public Conference apply(Integer integer, ConferenceDto conference) {
+    public Conference apply(Integer integer, ConferenceRequest conference) {
         return Conference.builder()
                 .id(integer)
                 .name(conference.getName())

@@ -1,6 +1,7 @@
 package conferences.service;
 
-import conferences.api.dto.ConferenceDto;
+import conferences.api.dto.ConferenceRequest;
+import conferences.api.dto.ConferenceResponse;
 import conferences.dao.ConferenceDao;
 import conferences.domain.Conference;
 import conferences.exceptions.ConferenceException;
@@ -24,12 +25,12 @@ public class ConferencesServiceImpl implements ConferencesService {
 
     @Override
     @Transactional
-    public int addNewConference(ConferenceDto conference) {
+    public int addNewConference(ConferenceRequest conference) {
         log.info("Add Conference Body Request{}", conference);
         if (conferenceDao.findByName(conference.getName()).isPresent()) {
             throw new ConferenceException("Conference With Name " + conference.getName() + " Already Exist!",
                     HttpStatus.CONFLICT);
-        } else if (conferenceDao.existBetweenDateStartAndDateEnd(conference.getDateStart(), conference.getDateEnd())) {
+        } else if (conferenceDao.existBetweenDateStartAndDateEnd(conference.getDateStart())) {
             throw new ConferenceException("Conference On Date " + conference.getDateStart() + " Already Exist!",
                     HttpStatus.BAD_REQUEST);
         }
@@ -39,13 +40,13 @@ public class ConferencesServiceImpl implements ConferencesService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ConferenceDto> receiveAllConferences() {
+    public List<ConferenceResponse> receiveAllConferences() {
         return conferenceDao.findAll().stream().map(Conference::to).collect(Collectors.toList());
     }
 
     @Override
     @Transactional
-    public void updateConference(Integer conferenceId, ConferenceDto conference) {
+    public void updateConference(Integer conferenceId, ConferenceRequest conference) {
         log.info("Update Conference By conferenceId{}, body{}", conferenceId, conference);
         var entity = conferenceDao.findById(conferenceId)
                 .orElseThrow(() -> new ConferenceException("Conference With Id " + conferenceId + " Not Found",
