@@ -10,5 +10,5 @@ import java.util.Optional;
 public interface ConferenceDao extends JpaRepository<Conference, Integer> {
     Optional<Conference> findByName(final String name);
 
-    boolean existBetweenDateStartAndDateEnd(final String start);
+    Optional<Conference> existsConferenceByDateStartAndDateEndBetween(final String start, final String end);
 }

@@ -33,6 +33,8 @@ public class TalksServiceImpl implements TalksService {
         log.info("Add New Talk By CondId{} and Body{}", conferenceId, talk);
         if (talksDao.findBySpeaker(talk.getSpeaker()).size() == 3) {
             throw new TalkException("3 Talks Limit", HttpStatus.CONFLICT);
+        } else if(talksDao.existsByTitle(talk.getTitle())) {
+            throw new TalkException("Title already exist", HttpStatus.CONFLICT);
         } else if (conferenceDao.findById(conferenceId)
                 .filter(e -> ChronoUnit.DAYS.between(e.getDateStart(), LocalDate.now()) < 30)
                 .isPresent()) {

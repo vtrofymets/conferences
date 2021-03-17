@@ -30,7 +30,7 @@ public class ConferencesServiceImpl implements ConferencesService {
         if (conferenceDao.findByName(conference.getName()).isPresent()) {
             throw new ConferenceException("Conference With Name " + conference.getName() + " Already Exist!",
                     HttpStatus.CONFLICT);
-        } else if (conferenceDao.existBetweenDateStartAndDateEnd(conference.getDateStart())) {
+        } else if (conferenceDao.existsConferenceByDateStartAndDateEndBetween(conference.getDateStart(), conference.getDateEnd()).isPresent()) {
             throw new ConferenceException("Conference On Date " + conference.getDateStart() + " Already Exist!",
                     HttpStatus.BAD_REQUEST);
         }
