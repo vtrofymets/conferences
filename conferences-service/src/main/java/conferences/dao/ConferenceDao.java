@@ -8,7 +8,7 @@ import java.util.Optional;
 
 @Repository
 public interface ConferenceDao extends JpaRepository<Conference, Integer> {
-    Optional<Conference> findByConferenceName(final String name);
+    Optional<Conference> findByName(final String name);
 
-    boolean findByConferenceDate(final String name);
+    boolean existBetweenDateStartAndDateEnd(final String start, final String end);
 }

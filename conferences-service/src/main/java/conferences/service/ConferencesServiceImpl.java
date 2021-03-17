@@ -26,10 +26,10 @@ public class ConferencesServiceImpl implements ConferencesService {
     @Transactional
     public int addNewConference(ConferenceDto conference) {
         log.info("Add Conference Body Request{}", conference);
-        if (conferenceDao.findByConferenceName(conference.getName()).isPresent()) {
+        if (conferenceDao.findByName(conference.getName()).isPresent()) {
             throw new ConferenceException("Conference With Name " + conference.getName() + " Already Exist!",
                     HttpStatus.CONFLICT);
-        } else if (conferenceDao.findByConferenceDate(conference.getDateStart())) {
+        } else if (conferenceDao.existBetweenDateStartAndDateEnd(conference.getDateStart(), conference.getDateEnd())) {
             throw new ConferenceException("Conference On Date " + conference.getDateStart() + " Already Exist!",
                     HttpStatus.BAD_REQUEST);
         }
