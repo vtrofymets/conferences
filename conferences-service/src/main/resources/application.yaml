@@ -2,6 +2,8 @@ server:
   port: 9999
 spring:
   flyway:
+    table: conferece_service_flyway_schema_history
+    baseline-on-migrate: true
     enabled: true
   datasource:
     url: jdbc:h2:file:./db/conference

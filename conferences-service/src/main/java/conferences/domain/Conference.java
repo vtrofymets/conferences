@@ -1,5 +1,6 @@
 package conferences.domain;
 
+
 import conferences.api.dto.ConferenceResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

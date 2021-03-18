@@ -1,5 +1,6 @@
 package conferences.providers;
 
+
 import conferences.api.dto.ConferenceRequest;
 import conferences.domain.Conference;
 import org.springframework.stereotype.Component;

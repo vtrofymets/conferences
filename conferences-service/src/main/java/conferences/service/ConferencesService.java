@@ -1,5 +1,6 @@
 package conferences.service;
 
+
 import conferences.api.dto.ConferenceRequest;
 import conferences.api.dto.ConferenceResponse;
 
