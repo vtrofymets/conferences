@@ -8,8 +8,8 @@ spring:
   datasource:
     url: jdbc:h2:file:./db/conference
     driverClassName: org.h2.Driver
-    username: test
-    password: test
+    username: conf
+    password: conf
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:

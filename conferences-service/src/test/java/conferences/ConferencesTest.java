@@ -24,11 +24,11 @@ import java.util.Optional;
 @SpringBootTest(classes = ConferencesServiceApplication.class)
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
-public class MockConferenceDaoTest {
+public class ConferencesTest {
 
     @Autowired
     private MockMvc mockMvc;
-    @MockBean
+    @Autowired
     private ConferenceDao conferenceDao;
 
     @Test
@@ -103,7 +103,7 @@ public class MockConferenceDaoTest {
 
         var body = new ObjectMapper().writeValueAsString(request);
 
-        Mockito.when(conferenceDao.checkOnExistPeriod(from, to)).thenReturn(1);
+        Mockito.when(conferenceDao.checkOnExistPeriod(request.getName(),from, to)).thenReturn(1);
 
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/conferences").contentType(MediaType.APPLICATION_JSON).content(body))

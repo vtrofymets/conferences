@@ -11,15 +11,15 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @Slf4j
 public class ConferencesExceptionController {
 
-    @ExceptionHandler(ConferenceException.class)
+    @ExceptionHandler({ConferenceException.class, TalkException.class})
     public ResponseEntity<String> handleConference(ConferenceException ex) {
         log.error(ex.getMessage());
         return new ResponseEntity<>(ex.getMessage(), ex.getStatus());
     }
 
-    @ExceptionHandler(TalkException.class)
-    public ResponseEntity<String> handleConference(TalkException ex) {
-        log.error(ex.getMessage());
-        return new ResponseEntity<>(ex.getMessage(), ex.getStatus());
-    }
+//    @ExceptionHandler(TalkException.class)
+//    public ResponseEntity<String> handleConference(TalkException ex) {
+//        log.error(ex.getMessage());
+//        return new ResponseEntity<>(ex.getMessage(), ex.getStatus());
+//    }
 }

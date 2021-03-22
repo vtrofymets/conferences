@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.LocalDate;
+import java.util.Objects;
 
 
 @Entity
@@ -30,13 +31,19 @@ public class Conference {
     private LocalDate dateEnd;
     private int participants;
 
-    public static ConferenceResponse to(Conference entity) {
-        return new ConferenceResponse().id(entity.getId())
-                .name(entity.getName())
-                .topic(entity.getTopic())
-                .dateStart(entity.getDateStart().toString())
-                .dateEnd(entity.getDateEnd().toString())
-                .participants(entity.getParticipants());
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Conference that = (Conference) o;
+        return participants == that.participants && Objects.equals(id, that.id) && Objects.equals(name,
+                that.name) && Objects.equals(topic, that.topic) && Objects.equals(dateStart,
+                that.dateStart) && Objects.equals(dateEnd, that.dateEnd);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, topic, dateStart, dateEnd, participants);
     }
 
     @Override

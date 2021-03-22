@@ -8,9 +8,10 @@ import java.util.List;
 
 public interface ConferencesService {
 
-    int addNewConference(ConferenceRequest conference);
+    int addConference(ConferenceRequest conference);
+
+    void updateConference(Integer conferenceId, ConferenceRequest conference);
 
     List<ConferenceResponse> receiveAllConferences();
 
-    void updateConference(Integer conferenceId, ConferenceRequest conference);
 }

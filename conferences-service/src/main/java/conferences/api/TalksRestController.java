@@ -21,12 +21,12 @@ public class TalksRestController implements TalksApi {
 
     @Override
     public ResponseEntity<Void> addTalk(@Min(1) Integer conferenceId, @Valid TalkRequest body) {
-        talksService.addNewTalkToConference(conferenceId, body);
+        talksService.addTalkToConference(conferenceId, body);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @Override
     public ResponseEntity<List<TalkResponse>> retrieveTalksByConferenceId(@Min(1) Integer conferenceId) {
-        return new ResponseEntity<>(talksService.receiveAllTalksByConferenceId(conferenceId), HttpStatus.OK);
+        return new ResponseEntity<>(talksService.receiveConferenceTalks(conferenceId), HttpStatus.OK);
     }
 }

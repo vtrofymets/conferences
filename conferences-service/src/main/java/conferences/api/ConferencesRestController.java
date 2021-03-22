@@ -25,7 +25,7 @@ public class ConferencesRestController implements ConferencesApi {
     @Override
     public ResponseEntity<Integer> addConference(@Valid ConferenceRequest body) {
         log.info("Add Conference Body Request{}", body);
-        return new ResponseEntity<>(conferencesService.addNewConference(body), HttpStatus.CREATED);
+        return new ResponseEntity<>(conferencesService.addConference(body), HttpStatus.CREATED);
     }
 
     @Override

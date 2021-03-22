@@ -28,12 +28,4 @@ public class Talk {
     private String speaker;
     private String type;
 
-    public static TalkResponse to(Integer conferenceId, Talk entity) {
-        return new TalkResponse().conferenceId(conferenceId)
-                .title(entity.getTitle())
-                .description(entity.getDescription())
-                .speaker(entity.getSpeaker())
-                .talkType(TalkType.fromValue(entity.getType()));
-    }
-
 }
