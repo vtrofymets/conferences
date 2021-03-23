@@ -5,10 +5,12 @@ import conferences.api.dto.ConferenceRequest;
 import conferences.api.dto.ConferenceResponse;
 import conferences.dao.ConferenceDao;
 import conferences.domain.Conference;
+import conferences.exceptions.ConferenceException;
 import conferences.providers.ConferencesProvider;
 import conferences.validations.Validation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +25,6 @@ public class ConferencesServiceImpl implements ConferencesService {
 
     private final ConferenceDao conferenceDao;
     private final ConferencesProvider provider;
-    private final List<Validation<Conference>> conferenceValidations;
 
     @Override
     @Transactional
@@ -44,7 +45,16 @@ public class ConferencesServiceImpl implements ConferencesService {
     }
 
     private void validation(Conference conference) {
-        conferenceValidations.forEach(v -> v.validate(conference));
+        if (conference.getId() != null && !conferenceDao.existsById(conference.getId())) {
+            throw new ConferenceException("Conference With Id " + conference.getId() + " Not Found",
+                    HttpStatus.NOT_FOUND);
+        }  else if (conferenceDao.findByName(conference.getName()).isPresent()) {
+            throw new ConferenceException("Conference With Name " + conference.getName() + " Already Exist!",
+                    HttpStatus.CONFLICT);
+        } else if (conferenceDao.checkOnExistPeriod(conference.getName(), conference.getDateStart(),
+                conference.getDateEnd()) > 0) {
+            throw new ConferenceException("Cant add Conference On this Dates!", HttpStatus.BAD_REQUEST);
+        }
     }
 
     @Override
