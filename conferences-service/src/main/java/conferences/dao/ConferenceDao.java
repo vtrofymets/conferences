@@ -12,6 +12,7 @@ import java.util.Optional;
 
 @Repository
 public interface ConferenceDao extends JpaRepository<Conference, Integer> {
+
     Optional<Conference> findByName(final String name);
 
     @Query("select count(*) from Conference c " +
