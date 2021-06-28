@@ -12,6 +12,6 @@ public interface ConferencesService {
 
     void updateConference(Integer conferenceId, ConferenceRequest conference);
 
-    List<ConferenceResponse> receiveAllConferences();
+    List<ConferenceResponse> receiveConferences(Boolean entirePeriod);
 
 }

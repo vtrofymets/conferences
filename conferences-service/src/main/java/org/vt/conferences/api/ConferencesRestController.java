@@ -29,8 +29,11 @@ public class ConferencesRestController implements ConferencesApi {
     }
 
     @Override
-    public ResponseEntity<List<ConferenceResponse>> allConferences() {
-        return new ResponseEntity<>(conferencesService.receiveAllConferences(), HttpStatus.OK);
+    public ResponseEntity<List<ConferenceResponse>> allConferences(Boolean entirePeriod) {
+        log.info("Receive conferences for entire period={}", entirePeriod);
+        var conferences = conferencesService.receiveConferences(entirePeriod);
+        log.info("Conferences[{}]", conferences.size());
+        return new ResponseEntity<>(conferences, HttpStatus.OK);
     }
 
     @Override

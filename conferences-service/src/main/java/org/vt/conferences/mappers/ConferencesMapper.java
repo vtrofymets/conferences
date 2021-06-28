@@ -1,4 +1,4 @@
-package org.vt.conferences.providers;
+package org.vt.conferences.mappers;
 
 
 import conferences.api.dto.ConferenceRequest;
@@ -7,14 +7,14 @@ import org.springframework.stereotype.Component;
 import org.vt.conferences.domain.Conference;
 
 import java.time.LocalDate;
-import java.util.function.BiFunction;
+import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
-public class ConferencesProvider implements BiFunction<Integer, ConferenceRequest, Conference> {
+public class ConferencesMapper {
 
-    @Override
-    public Conference apply(Integer integer, ConferenceRequest conference) {
+    public Conference map(Integer integer, ConferenceRequest conference) {
         return Conference.builder()
                 .id(integer)
                 .name(conference.getName())
@@ -25,7 +25,13 @@ public class ConferencesProvider implements BiFunction<Integer, ConferenceReques
                 .build();
     }
 
-    public Function<Conference, ConferenceResponse> toResponse() {
+    public List<ConferenceResponse> mapToList(List<Conference> conferences) {
+        return conferences.stream()
+                .map(toResponse())
+                .collect(Collectors.toList());
+    }
+
+    private Function<Conference, ConferenceResponse> toResponse() {
         return c -> new ConferenceResponse().id(c.getId())
                 .name(c.getName())
                 .topic(c.getTopic())

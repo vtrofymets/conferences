@@ -18,7 +18,7 @@ public interface ConferenceDao extends JpaRepository<Conference, Integer> {
     @Query("select count(*) from Conference c " + "where c.name != :name and" + "(c.dateStart between :start and :end " + "or " + "c.dateEnd between :start and :end)")
     int checkOnExistPeriod(@Param("name") String name, @Param("start") LocalDate start, @Param("end") LocalDate end);
 
-    @Query("select c from Conference c " + "where c.dateStart >= CURRENT_DATE()")
+    @Query("select c from Conference c where c.dateStart >= current_date")
     List<Conference> findAllActive();
 
 }

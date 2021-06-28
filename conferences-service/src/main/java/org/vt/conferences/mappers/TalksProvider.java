@@ -1,4 +1,4 @@
-package org.vt.conferences.providers;
+package org.vt.conferences.mappers;
 
 import conferences.api.dto.TalkRequest;
 import conferences.api.dto.TalkResponse;
@@ -6,14 +6,12 @@ import conferences.api.dto.TalkType;
 import org.springframework.stereotype.Component;
 import org.vt.conferences.domain.Talk;
 
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 @Component
-public class TalksProvider implements BiFunction<Integer, TalkRequest, Talk> {
+public class TalksProvider {
 
-    @Override
-    public Talk apply(Integer conferenceId, TalkRequest talk) {
+    public Talk map(Integer conferenceId, TalkRequest talk) {
         return Talk.builder()
                 .conferenceId(conferenceId)
                 .title(talk.getTitle())

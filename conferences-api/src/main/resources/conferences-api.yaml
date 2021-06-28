@@ -34,6 +34,14 @@ paths:
       tags:
         - conferences
       operationId: allConferences
+      parameters:
+        - in: query
+          name: entirePeriod
+          schema:
+            type: boolean
+            default: false
+          required: false
+          description: Receive conferences during all time period
       responses:
         '200':
           description: List of conferences.

@@ -10,7 +10,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.vt.conferences.dao.ConferenceDao;
 import org.vt.conferences.dao.TalksDao;
-import org.vt.conferences.providers.TalksProvider;
+import org.vt.conferences.mappers.TalksProvider;
 
 @SpringBootTest(classes = ConferencesServiceApplication.class)
 @ExtendWith(SpringExtension.class)

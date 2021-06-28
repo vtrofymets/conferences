@@ -1,19 +1,42 @@
 server:
   port: 9999
+
 spring:
+  application:
+    name: conferences
+  mvc:
+    throw-exception-if-no-handler-found: true
   flyway:
-    table: conferece_service_flyway_schema_history
     baseline-on-migrate: true
     enabled: true
   datasource:
-    url: jdbc:h2:file:./db/conference
-    driverClassName: org.h2.Driver
+    url: jdbc:h2:file:./db/conferences
     username: conf
     password: conf
+    driver-class-name: org.h2.Driver
+    hikari:
+      auto-commit: false
+      minimum-idle: 1
+      maximum-pool-size: 10
+      connection-test-query: SELECT 1
+      data-source-properties:
+        cacheServerConfiguration: true
+      pool-name: conferences-db-cp
   jpa:
+    generate-ddl: false
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        order_inserts: true
+        order_updates: true
+        batch_versioned_data: true
+        jdbc:
+          batch_size: 20
+          use_streams_for_binary: true
+      open-in-view: false
   h2:
     console:
       enabled: true

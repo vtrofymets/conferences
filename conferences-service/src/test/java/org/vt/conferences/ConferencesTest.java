@@ -16,7 +16,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.vt.conferences.dao.ConferenceDao;
 import org.vt.conferences.domain.Conference;
-import org.vt.conferences.providers.ConferencesProvider;
+import org.vt.conferences.mappers.ConferencesMapper;
 
 import java.time.LocalDate;
 
@@ -31,7 +31,7 @@ public class ConferencesTest {
     @Autowired
     private ConferenceDao conferenceDao;
     @Autowired
-    private ConferencesProvider conferencesProvider;
+    private ConferencesMapper conferencesMapper;
 
     @Test
     public void createConferenceStatus201() throws Exception {
@@ -81,7 +81,7 @@ public class ConferencesTest {
                 .dateEnd(LocalDate.of(2022, 10, 20).toString())
                 .participants(500);
 
-        Integer conferenceId = conferenceDao.save(conferencesProvider.apply(null, request)).getId();
+        Integer conferenceId = conferenceDao.save(conferencesMapper.map(null, request)).getId();
 
         org.assertj.core.api.Assertions.assertThat(conferenceId).isNotNegative();
 
