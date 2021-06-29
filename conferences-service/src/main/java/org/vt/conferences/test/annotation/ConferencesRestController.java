@@ -1,4 +1,4 @@
-package org.vt.conferences.experiment.annotation;
+package org.vt.conferences.test.annotation;
 
 import org.springframework.context.annotation.Bean;
 

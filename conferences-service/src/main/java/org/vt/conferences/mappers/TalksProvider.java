@@ -2,7 +2,6 @@ package org.vt.conferences.mappers;
 
 import conferences.api.dto.TalkRequest;
 import conferences.api.dto.TalkResponse;
-import conferences.api.dto.TalkType;
 import org.springframework.stereotype.Component;
 import org.vt.conferences.domain.Talk;
 
@@ -17,8 +16,7 @@ public class TalksProvider {
                 .title(talk.getTitle())
                 .description(talk.getDescription())
                 .speaker(talk.getSpeaker())
-                .type(talk.getTalkType()
-                        .name())
+                .type(talk.getTalkType())
                 .build();
     }
 
@@ -27,6 +25,6 @@ public class TalksProvider {
                 .title(t.getTitle())
                 .description(t.getDescription())
                 .speaker(t.getSpeaker())
-                .talkType(TalkType.fromValue(t.getType()));
+                .talkType(t.getType());
     }
 }

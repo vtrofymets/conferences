@@ -150,7 +150,8 @@ class ConferencesRestControllerTest {
 
     @Test
     void updateConferenceWithIdLessThan1ExpectedBadRequestTest() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.put("/conferences/{conferenceId}", 0))
+        mockMvc.perform(MockMvcRequestBuilders.put("/conferences/{conferenceId}", 0)
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status()
                         .isBadRequest());
     }

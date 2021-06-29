@@ -19,7 +19,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class Conference implements Domain {
+public class Conference {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

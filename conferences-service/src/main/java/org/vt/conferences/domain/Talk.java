@@ -1,21 +1,17 @@
 package org.vt.conferences.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import conferences.api.dto.TalkType;
+import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class Talk implements Domain {
+@EqualsAndHashCode
+public class Talk {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +20,7 @@ public class Talk implements Domain {
     private String title;
     private String description;
     private String speaker;
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private TalkType type;
 
 }

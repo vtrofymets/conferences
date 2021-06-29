@@ -13,7 +13,6 @@ import org.vt.conferences.dao.TalksDao;
 import org.vt.conferences.mappers.TalksProvider;
 
 @SpringBootTest(classes = ConferencesServiceApplication.class)
-@ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 public class TalkTest {

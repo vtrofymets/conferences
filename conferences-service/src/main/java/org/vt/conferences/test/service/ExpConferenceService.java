@@ -1,4 +1,4 @@
-package org.vt.conferences.experiment.service;
+package org.vt.conferences.test.service;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
