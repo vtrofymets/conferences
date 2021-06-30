@@ -14,7 +14,7 @@ Technologies used:
 
 Project implemented as REST API:
 
-Test coverage all levels(Controllers, Services, Daos, End-to-End)
+Test coverage all levels(Controllers, Services, DAO's, End-to-End)
 
 Swagger docs: .../conferences/docs or
 go to conferences/conferences-api/src/main/resources/conferences-api.yaml copy to https://editor.swagger.io/
