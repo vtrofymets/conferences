@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface ConferencesService {
 
-    int addConference(ConferenceRequest conference);
+    long addConference(ConferenceRequest conference);
 
-    void updateConference(Integer conferenceId, ConferenceRequest conference);
+    void updateConference(Long conferenceId, ConferenceRequest conference);
 
     List<ConferenceResponse> receiveConferences(Boolean entirePeriod);
 

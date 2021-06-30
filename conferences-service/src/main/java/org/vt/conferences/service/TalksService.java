@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface TalksService {
 
-    void addTalkToConference(Integer conferenceId, TalkRequest talk);
+    void addTalkToConference(Long conferenceId, TalkRequest talk);
 
-    List<TalkResponse> receiveConferenceTalks(Integer id);
+    List<TalkResponse> receiveConferenceTalks(Long id);
 }

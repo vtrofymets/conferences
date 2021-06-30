@@ -26,7 +26,7 @@ public class ConferencesServiceImpl implements ConferencesService {
 
     @Override
     @Transactional
-    public int addConference(ConferenceRequest request) {
+    public long addConference(ConferenceRequest request) {
         var conference = provider.map(null, request);
         validate(conference);
         log.info("Save = {}", conference);
@@ -36,7 +36,7 @@ public class ConferencesServiceImpl implements ConferencesService {
 
     @Override
     @Transactional
-    public void updateConference(Integer conferenceId, ConferenceRequest request) {
+    public void updateConference(Long conferenceId, ConferenceRequest request) {
         var conference = provider.map(conferenceId, request);
         validate(conference);
         log.info("Update = {}", conference);

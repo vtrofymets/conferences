@@ -32,7 +32,7 @@ class ConferencesValidationTest {
 
     @Test
     void conferenceExistValidationTest() {
-        var conference = conference(3453535);
+        var conference = conference(3453535L);
         Mockito.when(conferenceDao.existsById(conference.getId()))
                 .thenReturn(Boolean.FALSE);
 
@@ -41,7 +41,7 @@ class ConferencesValidationTest {
 
     @Test
     void periodValidationTest() {
-        var conference = conference(1);
+        var conference = conference(1L);
         Mockito.when(conferenceDao.checkOnExistPeriod(conference.getName(), conference.getDateStart(),
                 conference.getDateEnd()))
                 .thenReturn(1);
@@ -51,7 +51,7 @@ class ConferencesValidationTest {
 
     @Test
     void uniqueNameValidationTest() {
-        var conference = conference(123123);
+        var conference = conference(123123L);
         Mockito.when(conferenceDao.findByName(conference.getName()))
                 .thenReturn(Optional.of(conference));
 
@@ -64,7 +64,7 @@ class ConferencesValidationTest {
     }
 
 
-    private Conference conference(Integer id) {
+    private Conference conference(Long id) {
         return Conference.builder()
                 .id(id)
                 .name("NAME")

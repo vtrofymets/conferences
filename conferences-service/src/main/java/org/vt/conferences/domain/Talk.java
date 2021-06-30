@@ -15,8 +15,8 @@ public class Talk {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    private Integer conferenceId;
+    private Long id;
+    private Long conferenceId;
     private String title;
     private String description;
     private String speaker;

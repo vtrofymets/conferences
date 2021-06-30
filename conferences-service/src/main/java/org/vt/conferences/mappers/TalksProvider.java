@@ -10,7 +10,7 @@ import java.util.function.Function;
 @Component
 public class TalksProvider {
 
-    public Talk map(Integer conferenceId, TalkRequest talk) {
+    public Talk map(Long conferenceId, TalkRequest talk) {
         return Talk.builder()
                 .conferenceId(conferenceId)
                 .title(talk.getTitle())

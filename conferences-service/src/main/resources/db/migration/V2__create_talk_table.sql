@@ -1,6 +1,6 @@
 create table IF not exists talk (
-    id int auto_increment primary key,
-    conference_id int not null,
+    id identity primary key,
+    conference_id bigint not null,
     title varchar(100) not null,
     description varchar(250) not null,
     speaker varchar(50) not null,

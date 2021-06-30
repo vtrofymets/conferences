@@ -7,11 +7,11 @@ import org.vt.conferences.domain.Talk;
 import java.util.List;
 
 @Repository
-public interface TalksDao extends JpaRepository<Talk, Integer> {
+public interface TalksDao extends JpaRepository<Talk, Long> {
 
-    List<Talk> findByConferenceId(final Integer id);
+    List<Talk> findByConferenceId(final Long id);
 
-    boolean existsByConferenceIdAndTitle(final Integer id, final String title);
+    boolean existsByConferenceIdAndTitle(final Long id, final String title);
 
-    List<Talk> findByConferenceIdAndSpeaker(final Integer id, final String speaker);
+    List<Talk> findByConferenceIdAndSpeaker(final Long id, final String speaker);
 }

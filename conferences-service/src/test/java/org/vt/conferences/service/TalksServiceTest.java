@@ -43,7 +43,7 @@ public class TalksServiceTest {
                 .speaker(SPEAKER)
                 .talkType(TalkType.MASTER_CLASS);
 
-        talksService.addTalkToConference(1, request);
+        talksService.addTalkToConference(1L, request);
 
         Mockito.verify(talksDao)
                 .save(talk);
@@ -51,7 +51,7 @@ public class TalksServiceTest {
 
     @Test
     void receiveConferenceTalksTest() {
-        var id = 1;
+        var id = 1L;
         var talk = talk();
         Mockito.when(talksDao.findByConferenceId(id))
                 .thenReturn(List.of(talk));
@@ -71,7 +71,7 @@ public class TalksServiceTest {
 
     private Talk talk() {
         return Talk.builder()
-                .conferenceId(1)
+                .conferenceId(1L)
                 .description(DESCRIPTION)
                 .title(TITLE)
                 .speaker(SPEAKER)

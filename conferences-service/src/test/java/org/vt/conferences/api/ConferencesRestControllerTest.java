@@ -50,7 +50,7 @@ class ConferencesRestControllerTest {
                         .plusDays(3)
                         .toString());
         Mockito.when(conferencesService.addConference(request))
-                .thenReturn(1);
+                .thenReturn(1L);
 
         var content = objectMapper.writeValueAsString(request);
 
@@ -72,7 +72,7 @@ class ConferencesRestControllerTest {
                         .plusDays(3)
                         .toString());
         Mockito.when(conferencesService.addConference(request))
-                .thenReturn(1);
+                .thenReturn(1L);
 
         var content = objectMapper.writeValueAsString(request);
 
@@ -92,7 +92,7 @@ class ConferencesRestControllerTest {
                         .plusDays(3)
                         .toString());
         Mockito.when(conferencesService.addConference(request))
-                .thenReturn(1);
+                .thenReturn(1L);
 
         var content = objectMapper.writeValueAsString(request);
 
@@ -139,7 +139,7 @@ class ConferencesRestControllerTest {
 
         Mockito.doNothing()
                 .when(conferencesService)
-                .updateConference(1, request);
+                .updateConference(1L, request);
 
         mockMvc.perform(MockMvcRequestBuilders.put("/conferences/{conferenceId}", 1)
                 .content(content)
@@ -171,7 +171,7 @@ class ConferencesRestControllerTest {
 
         Mockito.doThrow(new ConferenceException("Conference With Id[" + 2342423 + "] Not Found", HttpStatus.NOT_FOUND))
                 .when(conferencesService)
-                .updateConference(2342423, request);
+                .updateConference(2342423L, request);
 
         mockMvc.perform(MockMvcRequestBuilders.put("/conferences/{conferenceId}", 2342423)
                 .content(content)

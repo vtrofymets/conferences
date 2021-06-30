@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @Component
 public class ConferencesMapper {
 
-    public Conference map(Integer integer, ConferenceRequest conference) {
+    public Conference map(Long integer, ConferenceRequest conference) {
         return Conference.builder()
                 .id(integer)
                 .name(conference.getName())

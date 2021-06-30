@@ -26,7 +26,7 @@ public class TalksServiceImpl implements TalksService {
 
     @Override
     @Transactional
-    public void addTalkToConference(Integer conferenceId, TalkRequest request) {
+    public void addTalkToConference(Long conferenceId, TalkRequest request) {
         var talk = provider.map(conferenceId, request);
         talkValidations.forEach(v -> v.validate(talk));
         log.info("Save = {}", talk);
@@ -35,7 +35,7 @@ public class TalksServiceImpl implements TalksService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<TalkResponse> receiveConferenceTalks(Integer id) {
+    public List<TalkResponse> receiveConferenceTalks(Long id) {
         return talksDao.findByConferenceId(id)
                 .stream()
                 .map(provider.toResponse())

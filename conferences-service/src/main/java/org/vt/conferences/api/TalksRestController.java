@@ -23,13 +23,13 @@ public class TalksRestController implements TalksApi {
     private final TalksService talksService;
 
     @Override
-    public ResponseEntity<Void> addTalk(@Min(1) Integer conferenceId, @Valid TalkRequest body) {
+    public ResponseEntity<Void> addTalk(@Min(1) Long conferenceId, @Valid TalkRequest body) {
         talksService.addTalkToConference(conferenceId, body);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @Override
-    public ResponseEntity<List<TalkResponse>> retrieveTalksByConferenceId(@Min(1) Integer conferenceId) {
+    public ResponseEntity<List<TalkResponse>> retrieveTalksByConferenceId(@Min(1) Long conferenceId) {
         log.info("Get Talks by conferenceId[{}]", conferenceId);
         return new ResponseEntity<>(talksService.receiveConferenceTalks(conferenceId), HttpStatus.OK);
     }

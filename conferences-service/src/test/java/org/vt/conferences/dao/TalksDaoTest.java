@@ -2,8 +2,6 @@ package org.vt.conferences.dao;
 
 import conferences.api.dto.TalkType;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +12,6 @@ import org.vt.conferences.domain.Conference;
 import org.vt.conferences.domain.Talk;
 
 import java.time.LocalDate;
-import java.util.List;
 
 /**
  * @author Vlad Trofymets
@@ -23,7 +20,6 @@ import java.util.List;
 @ContextConfiguration(classes = ConferencesServiceApplication.class)
 public class TalksDaoTest {
 
-    public static final int CONFERENCE_ID = 1;
     public static final String TITLE = "TITLE";
     public static final String SPEAKER = "SPEAKER";
     public static final String DESCRIPTION = "DESCRIPTION";
@@ -35,8 +31,7 @@ public class TalksDaoTest {
 
     @BeforeEach
     void beforeEach() {
-        conferenceDao.save(Conference.builder()
-                .id(1)
+        var conference = conferenceDao.save(Conference.builder()
                 .participants(111)
                 .dateStart(LocalDate.now())
                 .dateEnd(LocalDate.now())
@@ -44,12 +39,7 @@ public class TalksDaoTest {
                 .topic("TOPIC")
                 .build());
 
-        talksDao.save(talk());
-    }
-
-    @AfterEach
-    void afterEach() {
-
+        talksDao.save(talk(conference.getId()));
     }
 
     @Test
@@ -65,18 +55,18 @@ public class TalksDaoTest {
 
     @Test
     void findByConferenceIdTest() {
-        var actual = talksDao.findByConferenceId(CONFERENCE_ID);
+        var actual = talksDao.findAll();
 
         Assertions.assertThat(actual)
                 .doesNotContainNull()
                 .hasSize(1)
                 .extracting(Talk::getConferenceId)
-                .containsAnyOf(CONFERENCE_ID);
+                .doesNotContainNull();
     }
 
     @Test
     void existsByConferenceIdAndTitleTest() {
-        var actual = talksDao.existsByConferenceIdAndTitle(CONFERENCE_ID, TITLE);
+        var actual = talksDao.existsByConferenceIdAndTitle(getId(), TITLE);
 
         Assertions.assertThat(actual)
                 .isTrue();
@@ -84,7 +74,7 @@ public class TalksDaoTest {
 
     @Test
     void findByConferenceIdAndSpeakerTest() {
-        var actual = talksDao.findByConferenceIdAndSpeaker(CONFERENCE_ID, SPEAKER);
+        var actual = talksDao.findByConferenceIdAndSpeaker(getId(), SPEAKER);
 
         Assertions.assertThat(actual)
                 .doesNotContainNull()
@@ -93,9 +83,17 @@ public class TalksDaoTest {
                 .containsAnyOf(SPEAKER);
     }
 
-    private Talk talk() {
+    private Long getId() {
+        return conferenceDao.findAll()
+                .stream()
+                .findFirst()
+                .map(Conference::getId)
+                .orElseThrow();
+    }
+
+    private Talk talk(Long confId) {
         return Talk.builder()
-                .conferenceId(CONFERENCE_ID)
+                .conferenceId(confId)
                 .title(TITLE)
                 .speaker(SPEAKER)
                 .description(DESCRIPTION)

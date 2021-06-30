@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ConferenceDao extends JpaRepository<Conference, Integer> {
+public interface ConferenceDao extends JpaRepository<Conference, Long> {
 
     Optional<Conference> findByName(final String name);
 

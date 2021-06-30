@@ -34,24 +34,30 @@ public class ConferencesTest {
     public void createConferenceStatus201() throws Exception {
         var request = new ConferenceRequest().name("TestConference")
                 .topic("TestTopic")
-                .dateStart(LocalDate.of(2021, 10, 10).toString())
-                .dateEnd(LocalDate.of(2021, 10, 20).toString())
+                .dateStart(LocalDate.of(2021, 10, 10)
+                        .toString())
+                .dateEnd(LocalDate.of(2021, 10, 20)
+                        .toString())
                 .participants(500);
 
         var body = new ObjectMapper().writeValueAsString(request);
 
-        String response = mockMvc.perform(
-                MockMvcRequestBuilders.post("/conferences").contentType(MediaType.APPLICATION_JSON).content(body))
-                .andExpect(MockMvcResultMatchers.status().isCreated())
+        var response = mockMvc.perform(MockMvcRequestBuilders.post("/conferences")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body))
+                .andExpect(MockMvcResultMatchers.status()
+                        .isCreated())
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
 
         Assertions.assertNotNull(response);
-        int id = Integer.parseInt(response);
+        var id = Long.parseLong(response);
         Assertions.assertTrue(id > 0);
 
-        org.assertj.core.api.Assertions.assertThat(conferenceDao.findById(id).map(Conference::getName).orElse(null))
+        org.assertj.core.api.Assertions.assertThat(conferenceDao.findById(id)
+                .map(Conference::getName)
+                .orElse(null))
                 .isEqualTo("TestConference");
     }
 
@@ -59,34 +65,44 @@ public class ConferencesTest {
     public void checkParticipantsLessThan100() throws Exception {
         var request = new ConferenceRequest().name("TestConference")
                 .topic("TestTopic")
-                .dateStart(LocalDate.of(2021, 10, 10).toString())
-                .dateEnd(LocalDate.of(2021, 10, 20).toString())
+                .dateStart(LocalDate.of(2021, 10, 10)
+                        .toString())
+                .dateEnd(LocalDate.of(2021, 10, 20)
+                        .toString())
                 .participants(99);
 
         var body = new ObjectMapper().writeValueAsString(request);
 
-        mockMvc.perform(
-                MockMvcRequestBuilders.post("/conferences").contentType(MediaType.APPLICATION_JSON).content(body))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+        mockMvc.perform(MockMvcRequestBuilders.post("/conferences")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body))
+                .andExpect(MockMvcResultMatchers.status()
+                        .isBadRequest());
     }
 
     @Test
     public void checkConferenceUniqueName() throws Exception {
         var request = new ConferenceRequest().name("UniqueName")
                 .topic("TestTopic")
-                .dateStart(LocalDate.of(2022, 10, 10).toString())
-                .dateEnd(LocalDate.of(2022, 10, 20).toString())
+                .dateStart(LocalDate.of(2022, 10, 10)
+                        .toString())
+                .dateEnd(LocalDate.of(2022, 10, 20)
+                        .toString())
                 .participants(500);
 
-        Integer conferenceId = conferenceDao.save(conferencesMapper.map(null, request)).getId();
+        var conferenceId = conferenceDao.save(conferencesMapper.map(null, request))
+                .getId();
 
-        org.assertj.core.api.Assertions.assertThat(conferenceId).isNotNegative();
+        org.assertj.core.api.Assertions.assertThat(conferenceId)
+                .isNotNegative();
 
         var body = new ObjectMapper().writeValueAsString(request);
 
-        mockMvc.perform(
-                MockMvcRequestBuilders.post("/conferences").contentType(MediaType.APPLICATION_JSON).content(body))
-                .andExpect(MockMvcResultMatchers.status().isConflict());
+        mockMvc.perform(MockMvcRequestBuilders.post("/conferences")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body))
+                .andExpect(MockMvcResultMatchers.status()
+                        .isConflict());
     }
 
     @Test
@@ -97,12 +113,14 @@ public class ConferencesTest {
                 .dateStart(LocalDate.of(2021, 6, 10))
                 .dateEnd(LocalDate.of(2021, 6, 20))
                 .participants(400)
-                .build()).getId();
+                .build())
+                .getId();
 
-        org.assertj.core.api.Assertions.assertThat(anotherConf).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(anotherConf)
+                .isNotNull();
 
-        LocalDate from = LocalDate.of(2021, 6, 5);
-        LocalDate to = LocalDate.of(2021, 6, 15);
+        var from = LocalDate.of(2021, 6, 5);
+        var to = LocalDate.of(2021, 6, 15);
 
         var request = new ConferenceRequest().name("PeriodName")
                 .topic("PeriodTopic")
@@ -112,10 +130,10 @@ public class ConferencesTest {
 
         var body = new ObjectMapper().writeValueAsString(request);
 
-        mockMvc.perform(
-                MockMvcRequestBuilders.post("/conferences")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(body))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+        mockMvc.perform(MockMvcRequestBuilders.post("/conferences")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body))
+                .andExpect(MockMvcResultMatchers.status()
+                        .isBadRequest());
     }
 }

@@ -23,7 +23,7 @@ public class ConferencesRestController implements ConferencesApi {
     private final ConferencesService conferencesService;
 
     @Override
-    public ResponseEntity<Integer> addConference(@Valid ConferenceRequest body) {
+    public ResponseEntity<Long> addConference(@Valid ConferenceRequest body) {
         log.info("Add Conference Body Request{}", body);
         return new ResponseEntity<>(conferencesService.addConference(body), HttpStatus.CREATED);
     }
@@ -37,7 +37,7 @@ public class ConferencesRestController implements ConferencesApi {
     }
 
     @Override
-    public ResponseEntity<Void> updateConference(@Min(1) Integer conferenceId, @Valid ConferenceRequest body) {
+    public ResponseEntity<Void> updateConference(@Min(1) Long conferenceId, @Valid ConferenceRequest body) {
         log.info("Update Conference By conferenceId{}, body{}", conferenceId, body);
         conferencesService.updateConference(conferenceId, body);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

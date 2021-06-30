@@ -41,19 +41,17 @@ public class ConferencesServiceTest {
     void addConferenceTest() {
         var request = new ConferenceRequest().topic(TOPIC)
                 .name(NAME)
-                .dateStart(DATE_START
-                        .toString())
-                .dateEnd(DATE_END
-                        .toString())
+                .dateStart(DATE_START.toString())
+                .dateEnd(DATE_END.toString())
                 .participants(PARTICIPANTS);
 
         var conference = Conference.builder()
-                .id(1)
+                .id(1L)
                 .build();
         Mockito.when(conferenceDao.save(Mockito.any()))
                 .thenReturn(conference);
 
-        int actual = conferencesService.addConference(request);
+        var actual = conferencesService.addConference(request);
 
         Assertions.assertThat(actual)
                 .isNotNull()
@@ -63,7 +61,7 @@ public class ConferencesServiceTest {
     @Test
     void receiveConferencesTest() {
         var conference = Conference.builder()
-                .id(1)
+                .id(1L)
                 .participants(PARTICIPANTS)
                 .dateStart(DATE_START)
                 .dateEnd(DATE_END)
@@ -75,14 +73,14 @@ public class ConferencesServiceTest {
 
         var actual = conferencesService.receiveConferences(Boolean.TRUE);
 
-        var expected = new ConferenceResponse().id(1)
+        var expected = new ConferenceResponse().id(1L)
                 .name(NAME)
                 .topic(TOPIC)
                 .participants(PARTICIPANTS)
-                .dateStart(DATE_START
-                        .toString())
+                .dateStart(DATE_START.toString())
                 .dateEnd(DATE_END.toString());
 
-        Assertions.assertThat(actual).isEqualTo(List.of(expected));
+        Assertions.assertThat(actual)
+                .isEqualTo(List.of(expected));
     }
 }

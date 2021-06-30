@@ -13,7 +13,6 @@ import org.vt.conferences.dao.ConferenceDao;
 import org.vt.conferences.dao.TalksDao;
 import org.vt.conferences.domain.Conference;
 import org.vt.conferences.domain.Talk;
-import org.vt.conferences.exceptions.ConferenceException;
 import org.vt.conferences.exceptions.TalkException;
 
 import java.time.LocalDate;
@@ -26,6 +25,7 @@ import java.util.Optional;
 @ExtendWith(MockitoExtension.class)
 public class TalksValidationTest {
 
+    public static final long ID = 1L;
     @Mock
     private ConferenceDao conferenceDao;
     @Mock
@@ -40,7 +40,7 @@ public class TalksValidationTest {
     @Test
     void submissionValidationTest() {
         var talk = talk();
-        Mockito.when(conferenceDao.findById(1))
+        Mockito.when(conferenceDao.findById(ID))
                 .thenReturn(Optional.of(conference()));
 
         checkThrowBy(() -> submissionValidation.validate(talk));
@@ -50,7 +50,7 @@ public class TalksValidationTest {
     void speakerLimitValidationTest() {
         var talk = talk();
         Mockito.when(talksDao.findByConferenceIdAndSpeaker(talk.getId(), talk.getSpeaker()))
-                .thenReturn(List.of(talk,talk,talk));
+                .thenReturn(List.of(talk, talk, talk));
 
         checkThrowBy(() -> speakerLimitValidation.validate(talk));
     }
@@ -71,8 +71,8 @@ public class TalksValidationTest {
 
     private Talk talk() {
         return Talk.builder()
-                .id(1)
-                .conferenceId(1)
+                .id(ID)
+                .conferenceId(ID)
                 .description("Description")
                 .speaker("Speaker")
                 .type(TalkType.MASTER_CLASS)
@@ -82,7 +82,7 @@ public class TalksValidationTest {
 
     private Conference conference() {
         return Conference.builder()
-                .id(1)
+                .id(ID)
                 .name("NAME")
                 .topic("TOPIC")
                 .dateStart(LocalDate.now())
