@@ -12,7 +12,7 @@ Technologies used:
 7. Spring Boot Test
 8. Database: H2
 
-Project implemented as REST API:
+Project implemented as REST API
 
 Test coverage all levels(Controllers, Services, DAO's, End-to-End)
 
