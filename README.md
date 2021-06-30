@@ -17,7 +17,7 @@ Project implemented as REST API:
 Test coverage all levels(Controllers, Services, DAO's, End-to-End)
 
 Swagger docs: .../conferences/docs or
-go to conferences/conferences-api/src/main/resources/conferences-api.yaml copy to https://editor.swagger.io/
+go to conferences/src/main/resources/api/conferences-api.yaml copy to https://editor.swagger.io/
 
 Swagger-ui: .../conferences/swagger-ui
 ![image](https://user-images.githubusercontent.com/36380303/123937240-a1f23f80-d99e-11eb-95f7-b465d1e13450.png)
