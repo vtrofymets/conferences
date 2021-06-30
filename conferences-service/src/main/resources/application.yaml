@@ -40,3 +40,9 @@ spring:
   h2:
     console:
       enabled: true
+
+springdoc:
+  api-docs:
+    path: ${spring.application.name}/docs
+  swagger-ui:
+    path: /${spring.application.name}/swagger-ui
