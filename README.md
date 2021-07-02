@@ -2,6 +2,8 @@
 
 Project: Manage conferences and collection of statements to topic.
 
+Project implemented as REST API
+
 Technologies used:
 1. Spring Boot
 2. Spring Data JPA
@@ -12,9 +14,11 @@ Technologies used:
 7. Spring Boot Test
 8. Database: H2
 
-Project implemented as REST API
-
-Test coverage all levels(Controllers, Services, DAO's, End-to-End)
+Test cover levels:
+1. Controllers 
+2. Services
+3. DAO's
+4. End-to-End
 
 Swagger docs: .../conferences/docs or
 go to conferences/src/main/resources/api/conferences-api.yaml copy to https://editor.swagger.io/
