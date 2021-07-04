@@ -1,6 +1,6 @@
 # conferences-service
 
-Project: Manage conferences and collection of statements to topic.
+Project description: Manage conferences and collection of statements to topic.
 
 Project implemented as REST API
 
