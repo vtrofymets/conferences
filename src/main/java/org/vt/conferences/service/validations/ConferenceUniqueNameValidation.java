@@ -1,9 +1,5 @@
 package org.vt.conferences.service.validations;
 
-/**
- * @author Vlad Trofymets on 06.05.2021
- */
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -11,18 +7,21 @@ import org.vt.conferences.dao.ConferenceDao;
 import org.vt.conferences.domain.Conference;
 import org.vt.conferences.exceptions.ConferenceException;
 
+/**
+ * @author Vlad Trofymets
+ */
 @Service
 @RequiredArgsConstructor
-public class PeriodValidation implements Validation<Conference> {
+public class ConferenceUniqueNameValidation implements Validation<Conference> {
 
     private final ConferenceDao conferenceDao;
 
     @Override
     public void validate(Conference conference) {
-        if (conferenceDao.checkOnExistPeriod(conference.getName(), conference.getDateStart(),
-                conference.getDateEnd()) > 0) {
-            throw new ConferenceException("Cant add Conference On this Dates!", HttpStatus.BAD_REQUEST);
+        if (conference.getId() == null && conferenceDao.findByName(conference.getName())
+                .isPresent()) {
+            throw new ConferenceException("Conference with name=[" + conference.getName() + "] already exist!",
+                    HttpStatus.CONFLICT);
         }
     }
 }
-

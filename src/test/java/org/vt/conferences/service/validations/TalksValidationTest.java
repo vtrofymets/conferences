@@ -47,6 +47,15 @@ public class TalksValidationTest {
     }
 
     @Test
+    void submissionValidationSuccessTest() {
+        var talk = talk();
+        Mockito.when(conferenceDao.findById(ID))
+                .thenReturn(Optional.of(conference2()));
+
+        submissionValidation.validate(talk);
+    }
+
+    @Test
     void speakerLimitValidationTest() {
         var talk = talk();
         Mockito.when(talksDao.findByConferenceIdAndSpeaker(talk.getId(), talk.getSpeaker()))
@@ -88,6 +97,18 @@ public class TalksValidationTest {
                 .dateStart(LocalDate.now())
                 .dateEnd(LocalDate.now()
                         .plusDays(1))
+                .participants(111)
+                .build();
+    }
+
+    private Conference conference2() {
+        return Conference.builder()
+                .id(ID)
+                .name("NAME")
+                .topic("TOPIC")
+                .dateStart(LocalDate.now().plusMonths(1))
+                .dateEnd(LocalDate.now()
+                        .plusMonths(2))
                 .participants(111)
                 .build();
     }

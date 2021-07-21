@@ -22,13 +22,14 @@ public class ConferencesServiceImpl implements ConferencesService {
 
     private final ConferenceDao conferenceDao;
     private final ConferencesMapper provider;
+    private final ValidationsService validationsService;
     private final List<Validation<Conference>> conferenceValidations;
 
     @Override
     @Transactional
     public long addConference(ConferenceRequest request) {
         var conference = provider.map(null, request);
-        validate(conference);
+        validationsService.validation(conference, conferenceValidations);
         log.info("Save = {}", conference);
         return conferenceDao.save(conference)
                 .getId();
@@ -38,14 +39,11 @@ public class ConferencesServiceImpl implements ConferencesService {
     @Transactional
     public void updateConference(Long conferenceId, ConferenceRequest request) {
         var conference = provider.map(conferenceId, request);
-        validate(conference);
+        validationsService.validation(conference, conferenceValidations);
         log.info("Update = {}", conference);
         conferenceDao.save(conference);
     }
 
-    private void validate(Conference c) {
-        conferenceValidations.forEach(v -> v.validate(c));
-    }
 
     @Override
     @Transactional(readOnly = true)

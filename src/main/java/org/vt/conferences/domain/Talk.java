@@ -23,4 +23,8 @@ public class Talk {
     @Enumerated(EnumType.STRING)
     private TalkType type;
 
+    @ManyToOne
+    @JoinColumn(name = "conferenceId", referencedColumnName = "id", insertable = false, updatable = false)
+    private Conference conference;
+
 }

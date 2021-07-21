@@ -22,13 +22,14 @@ public class TalksServiceImpl implements TalksService {
 
     private final TalksDao talksDao;
     private final TalksProvider provider;
+    private final ValidationsService validationsService;
     private final List<Validation<Talk>> talkValidations;
 
     @Override
     @Transactional
     public void addTalkToConference(Long conferenceId, TalkRequest request) {
         var talk = provider.map(conferenceId, request);
-        talkValidations.forEach(v -> v.validate(talk));
+        validationsService.validation(talk, talkValidations);
         log.info("Save = {}", talk);
         talksDao.save(talk);
     }

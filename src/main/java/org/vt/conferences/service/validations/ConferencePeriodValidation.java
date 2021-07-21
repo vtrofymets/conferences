@@ -8,20 +8,20 @@ import org.vt.conferences.domain.Conference;
 import org.vt.conferences.exceptions.ConferenceException;
 
 /**
- * @author Vlad Trofymets on 06.05.2021
+ * @author Vlad Trofymets
  */
 @Service
 @RequiredArgsConstructor
-public class UniqueNameValidation implements Validation<Conference> {
+public class ConferencePeriodValidation implements Validation<Conference> {
 
     private final ConferenceDao conferenceDao;
 
     @Override
     public void validate(Conference conference) {
-        if (conferenceDao.findByName(conference.getName())
-                .isPresent()) {
-            throw new ConferenceException("Conference With Name " + conference.getName() + " Already Exist!",
-                    HttpStatus.CONFLICT);
+        if (conferenceDao.checkOnExistPeriod(conference.getName(), conference.getDateStart(),
+                conference.getDateEnd()) > 0) {
+            throw new ConferenceException("Can't add Conference on this dates!", HttpStatus.BAD_REQUEST);
         }
     }
 }
+

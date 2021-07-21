@@ -3,11 +3,9 @@ package org.vt.conferences.domain;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Entity
@@ -27,5 +25,8 @@ public class Conference {
     private LocalDate dateStart;
     private LocalDate dateEnd;
     private int participants;
+
+    @OneToMany(mappedBy = "conference")
+    private List<Talk> talks;
 
 }

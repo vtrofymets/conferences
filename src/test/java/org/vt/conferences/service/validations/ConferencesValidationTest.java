@@ -26,9 +26,9 @@ class ConferencesValidationTest {
     @InjectMocks
     private ConferenceExistValidation conferenceExistValidation;
     @InjectMocks
-    private PeriodValidation periodValidation;
+    private ConferencePeriodValidation conferencePeriodValidation;
     @InjectMocks
-    private UniqueNameValidation uniqueNameValidation;
+    private ConferenceUniqueNameValidation conferenceUniqueNameValidation;
 
     @Test
     void conferenceExistValidationTest() {
@@ -46,16 +46,16 @@ class ConferencesValidationTest {
                 conference.getDateEnd()))
                 .thenReturn(1);
 
-        checkThrowBy(() -> periodValidation.validate(conference));
+        checkThrowBy(() -> conferencePeriodValidation.validate(conference));
     }
 
     @Test
     void uniqueNameValidationTest() {
-        var conference = conference(123123L);
+        var conference = conference(null);
         Mockito.when(conferenceDao.findByName(conference.getName()))
                 .thenReturn(Optional.of(conference));
 
-        checkThrowBy(() -> uniqueNameValidation.validate(conference));
+        checkThrowBy(() -> conferenceUniqueNameValidation.validate(conference));
     }
 
     private void checkThrowBy(ThrowableAssert.ThrowingCallable call) {

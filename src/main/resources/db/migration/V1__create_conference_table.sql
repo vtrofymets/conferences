@@ -1,4 +1,4 @@
-create table IF not exists conference (
+create table conference (
     id identity primary key,
     name varchar(250) not null unique,
     topic varchar(250) not null,

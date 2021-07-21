@@ -1,4 +1,4 @@
-create table IF not exists talk (
+create table talk (
     id identity primary key,
     conference_id bigint not null,
     title varchar(100) not null,

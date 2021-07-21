@@ -8,7 +8,7 @@ import org.vt.conferences.domain.Conference;
 import org.vt.conferences.exceptions.ConferenceException;
 
 /**
- * @author Vlad Trofymets on 06.05.2021
+ * @author Vlad Trofymets
  */
 @Service
 @RequiredArgsConstructor
@@ -19,7 +19,7 @@ public class ConferenceExistValidation implements Validation<Conference> {
     @Override
     public void validate(Conference conference) {
         if (conference.getId() != null && !conferenceDao.existsById(conference.getId())) {
-            throw new ConferenceException("Conference With Id[" + conference.getId() + "] Not Found",
+            throw new ConferenceException("Conference with id=[" + conference.getId() + "] Not Found",
                     HttpStatus.NOT_FOUND);
         }
     }
