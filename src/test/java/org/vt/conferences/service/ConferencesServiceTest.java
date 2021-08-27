@@ -1,15 +1,13 @@
 package org.vt.conferences.service;
 
-import conferences.api.dto.ConferenceRequest;
-import conferences.api.dto.ConferenceResponse;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
-import org.vt.conferences.ConferencesServiceApplication;
 import org.vt.conferences.dao.ConferenceDao;
 import org.vt.conferences.domain.Conference;
 
@@ -19,7 +17,8 @@ import java.util.List;
 /**
  * @author Vlad Trofymets
  */
-@SpringBootTest(classes = ConferencesServiceApplication.class)
+//@SpringBootTest(classes = ConferencesServiceApplication.class)
+@ExtendWith(MockitoExtension.class)
 @ActiveProfiles("test")
 public class ConferencesServiceTest {
 
@@ -31,36 +30,32 @@ public class ConferencesServiceTest {
     public static final LocalDate DATE_END = LocalDate.now()
             .plusDays(6);
 
-    @Autowired
-    private ConferencesService conferencesService;
-
-    @MockBean
+    @InjectMocks
+    private ConferencesServiceImpl conferencesService;
+    @Mock
+    private ValidationsService validationsService;
+    @Mock
     private ConferenceDao conferenceDao;
 
     @Test
     void addConferenceTest() {
-        var request = new ConferenceRequest().topic(TOPIC)
-                .name(NAME)
-                .dateStart(DATE_START.toString())
-                .dateEnd(DATE_END.toString())
-                .participants(PARTICIPANTS);
-
-        var conference = Conference.builder()
+        var expected = Conference.builder()
                 .id(1L)
                 .build();
+        validationsService.validation(Mockito.any(), Mockito.anyList());
         Mockito.when(conferenceDao.save(Mockito.any()))
-                .thenReturn(conference);
+                .thenReturn(expected);
 
-        var actual = conferencesService.addConference(request);
+        var actual = conferencesService.addConference(expected);
 
         Assertions.assertThat(actual)
                 .isNotNull()
-                .isEqualTo(conference.getId());
+                .isEqualTo(expected.getId());
     }
 
     @Test
     void receiveConferencesTest() {
-        var conference = Conference.builder()
+        var expcted = Conference.builder()
                 .id(1L)
                 .participants(PARTICIPANTS)
                 .dateStart(DATE_START)
@@ -69,18 +64,11 @@ public class ConferencesServiceTest {
                 .topic(TOPIC)
                 .build();
         Mockito.when(conferenceDao.findAll())
-                .thenReturn(List.of(conference));
+                .thenReturn(List.of(expcted));
 
         var actual = conferencesService.receiveConferences(Boolean.TRUE);
 
-        var expected = new ConferenceResponse().id(1L)
-                .name(NAME)
-                .topic(TOPIC)
-                .participants(PARTICIPANTS)
-                .dateStart(DATE_START.toString())
-                .dateEnd(DATE_END.toString());
-
         Assertions.assertThat(actual)
-                .isEqualTo(List.of(expected));
+                .isEqualTo(List.of(expcted));
     }
 }

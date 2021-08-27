@@ -1,17 +1,16 @@
 package org.vt.conferences.service;
 
 
-import conferences.api.dto.ConferenceRequest;
-import conferences.api.dto.ConferenceResponse;
+import org.vt.conferences.domain.Conference;
 
 import java.util.List;
 
 public interface ConferencesService {
 
-    long addConference(ConferenceRequest conference);
+    long addConference(Conference conference);
 
-    void updateConference(Long conferenceId, ConferenceRequest conference);
+    void updateConference(Conference conference);
 
-    List<ConferenceResponse> receiveConferences(Boolean entirePeriod);
+    List<Conference> receiveConferences(Boolean entirePeriod);
 
 }

@@ -1,7 +1,7 @@
 package org.vt.conferences.service.validations;
 
 /**
- * @author Vlad Trofymets on 06.05.2021
+ * @author Vlad Trofymets
  */
 @FunctionalInterface
 public interface Validation<T> {

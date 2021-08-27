@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import conferences.api.dto.ConferenceRequest;
 import conferences.api.dto.ConferenceResponse;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -16,17 +17,19 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.vt.conferences.ConferencesServiceApplication;
+import org.vt.conferences.domain.Conference;
 import org.vt.conferences.exceptions.ConferenceException;
+import org.vt.conferences.mappers.ConferencesMapper;
 import org.vt.conferences.service.ConferencesService;
 
 import java.time.LocalDate;
 import java.util.List;
 
 /**
- * @author Vlad Trofymets on 07.05.2021
+ * @author Vlad Trofymets
  */
 @WebMvcTest(controllers = ConferencesRestController.class)
-@ContextConfiguration(classes = ConferencesServiceApplication.class)
+@ContextConfiguration(classes = {ConferencesServiceApplication.class, ConferencesMapper.class})
 @ActiveProfiles("test")
 class ConferencesRestControllerTest {
 
@@ -49,7 +52,7 @@ class ConferencesRestControllerTest {
                 .dateEnd(LocalDate.now()
                         .plusDays(3)
                         .toString());
-        Mockito.when(conferencesService.addConference(request))
+        Mockito.when(conferencesService.addConference(Mockito.any()))
                 .thenReturn(1L);
 
         var content = objectMapper.writeValueAsString(request);
@@ -71,7 +74,7 @@ class ConferencesRestControllerTest {
                 .dateEnd(LocalDate.now()
                         .plusDays(3)
                         .toString());
-        Mockito.when(conferencesService.addConference(request))
+        Mockito.when(conferencesService.addConference(Mockito.any()))
                 .thenReturn(1L);
 
         var content = objectMapper.writeValueAsString(request);
@@ -91,7 +94,7 @@ class ConferencesRestControllerTest {
                 .dateEnd(LocalDate.now()
                         .plusDays(3)
                         .toString());
-        Mockito.when(conferencesService.addConference(request))
+        Mockito.when(conferencesService.addConference(Mockito.any()))
                 .thenReturn(1L);
 
         var content = objectMapper.writeValueAsString(request);
@@ -106,7 +109,10 @@ class ConferencesRestControllerTest {
     @Test
     void receiveAllConferencesTest() throws Exception {
         Mockito.when(conferencesService.receiveConferences(Boolean.FALSE))
-                .thenReturn(List.of(new ConferenceResponse()));
+                .thenReturn(List.of(Conference.builder()
+                        .dateStart(LocalDate.now())
+                        .dateEnd(LocalDate.now())
+                        .build()));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/conferences"))
                 .andExpect(MockMvcResultMatchers.status()
@@ -116,7 +122,10 @@ class ConferencesRestControllerTest {
     @Test
     void receiveAllConferencesWithEntirePeriodTrueTest() throws Exception {
         Mockito.when(conferencesService.receiveConferences(Boolean.TRUE))
-                .thenReturn(List.of(new ConferenceResponse()));
+                .thenReturn(List.of(Conference.builder()
+                        .dateStart(LocalDate.now())
+                        .dateEnd(LocalDate.now())
+                        .build()));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/conferences")
                 .queryParam("entirePeriod", Boolean.TRUE.toString()))
@@ -139,7 +148,7 @@ class ConferencesRestControllerTest {
 
         Mockito.doNothing()
                 .when(conferencesService)
-                .updateConference(1L, request);
+                .updateConference(Mockito.any());
 
         mockMvc.perform(MockMvcRequestBuilders.put("/conferences/{conferenceId}", 1)
                 .content(content)
@@ -171,7 +180,7 @@ class ConferencesRestControllerTest {
 
         Mockito.doThrow(new ConferenceException("Conference With Id[" + 2342423 + "] Not Found", HttpStatus.NOT_FOUND))
                 .when(conferencesService)
-                .updateConference(2342423L, request);
+                .updateConference(Mockito.any());
 
         mockMvc.perform(MockMvcRequestBuilders.put("/conferences/{conferenceId}", 2342423)
                 .content(content)

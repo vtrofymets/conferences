@@ -47,7 +47,7 @@ public class ValidationsServiceImpl implements ValidationsService {
 
     @Override
     public <T> void validation(@NonNull T t, @NonNull List<Validation<T>> validations) {
-        log.info("Start validation[{}]", t);
+        log.info("Start validation for=[{}]", t);
         validations.forEach(v -> v.validate(t));
     }
 }

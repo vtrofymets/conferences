@@ -1,15 +1,12 @@
 package org.vt.conferences.service;
 
 
-import conferences.api.dto.ConferenceRequest;
-import conferences.api.dto.ConferenceResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.vt.conferences.dao.ConferenceDao;
 import org.vt.conferences.domain.Conference;
-import org.vt.conferences.mappers.ConferencesMapper;
 import org.vt.conferences.service.validations.Validation;
 
 import java.util.List;
@@ -21,14 +18,12 @@ import java.util.List;
 public class ConferencesServiceImpl implements ConferencesService {
 
     private final ConferenceDao conferenceDao;
-    private final ConferencesMapper provider;
     private final ValidationsService validationsService;
     private final List<Validation<Conference>> conferenceValidations;
 
     @Override
     @Transactional
-    public long addConference(ConferenceRequest request) {
-        var conference = provider.map(null, request);
+    public long addConference(Conference conference) {
         validationsService.validation(conference, conferenceValidations);
         log.info("Save = {}", conference);
         return conferenceDao.save(conference)
@@ -37,8 +32,7 @@ public class ConferencesServiceImpl implements ConferencesService {
 
     @Override
     @Transactional
-    public void updateConference(Long conferenceId, ConferenceRequest request) {
-        var conference = provider.map(conferenceId, request);
+    public void updateConference(Conference conference) {
         validationsService.validation(conference, conferenceValidations);
         log.info("Update = {}", conference);
         conferenceDao.save(conference);
@@ -47,10 +41,10 @@ public class ConferencesServiceImpl implements ConferencesService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ConferenceResponse> receiveConferences(Boolean entirePeriod) {
+    public List<Conference> receiveConferences(Boolean entirePeriod) {
         var conferences = entirePeriod ? conferenceDao.findAll() : conferenceDao.findAllActive();
         log.info("Find conferences[{}], entirePeriod[{}]", conferences.size(), entirePeriod);
-        return provider.mapToList(conferences);
+        return conferences;
     }
 
 }
