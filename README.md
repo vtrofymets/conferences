@@ -5,7 +5,7 @@ Project description: Manage conferences and collection of statements to topic.
 Project implemented as REST API
 
 Technologies used:
-1. Java 17
+1. Java 21
 2. Spring Boot 3
 3. Spring Data JPA
 4. Spring Web
