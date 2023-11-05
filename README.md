@@ -5,18 +5,21 @@ Project description: Manage conferences and collection of statements to topic.
 Project implemented as REST API
 
 Technologies used:
-0. Java 17
-1. Spring Boot 3
-2. Spring Data JPA
-3. Spring Web
-4. Maven
-5. OpenAPI Generator
-6. Flyway
-7. Spring Boot Test
-8. Database: Postgres
+1. Java 17
+2. Spring Boot 3
+3. Spring Data JPA
+4. Spring Web
+5. Spring Security
+6. Spring Actuator
+7. Mapstruct
+8. Maven
+9. OpenAPI Generator
+10. Flyway
+11. Spring Boot Test
+12. Database: Postgres
 
 Test cover levels:
-1. Controllers 
+1. RestControllers
 2. Services
 3. DAO's + Testcontainers
 4. End-to-End
