@@ -1,12 +1,12 @@
 package org.vt.conferences.dao;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.ContextConfiguration;
-import org.vt.conferences.ConferencesServiceApplication;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.vt.conferences.domain.Conference;
 
 import java.time.LocalDate;
@@ -15,8 +15,8 @@ import java.util.List;
 /**
  * @author Vlad Trofymets
  */
-@DataJpaTest
-@ContextConfiguration(classes = ConferencesServiceApplication.class)
+@SpringBootTest
+@ActiveProfiles("test")
 public class ConferenceDaoTest {
 
     public static final String TOPIC = "TOPIC";
@@ -30,6 +30,11 @@ public class ConferenceDaoTest {
     @BeforeEach
     void beforeEach() {
         conferenceDao.saveAll(conferences());
+    }
+
+    @AfterEach
+    void afterEach() {
+        conferenceDao.deleteAll();
     }
 
     @Test
@@ -58,7 +63,7 @@ public class ConferenceDaoTest {
     }
 
     @Test
-    void checkOnExistPeriodWhereReturn1Test() {
+    void checkOnExistPeriodWhereReturnOneTest() {
         int actual = conferenceDao.checkOnExistPeriod(NAME, LocalDate.now(), LocalDate.now());
 
         Assertions.assertThat(actual)

@@ -1,35 +1,39 @@
 package org.vt.conferences.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import conferences.api.dto.ConferenceCreatedResponse;
 import conferences.api.dto.ConferenceRequest;
 import conferences.api.dto.ConferenceResponse;
+import conferences.api.dto.ErrorResponse;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.autoconfigure.endpoint.web.WebEndpointProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.vt.conferences.ConferencesServiceApplication;
+import org.vt.conferences.config.security.WebSecurityConfig;
 import org.vt.conferences.domain.Conference;
 import org.vt.conferences.exceptions.ConferenceException;
-import org.vt.conferences.mappers.ConferencesMapper;
+import org.vt.conferences.mappers.ConferenceMapperImpl;
 import org.vt.conferences.service.ConferencesService;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.LongStream;
 
 /**
  * @author Vlad Trofymets
  */
 @WebMvcTest(controllers = ConferencesRestController.class)
-@ContextConfiguration(classes = {ConferencesServiceApplication.class, ConferencesMapper.class})
+@Import(value = {ConferenceMapperImpl.class, WebSecurityConfig.class, WebEndpointProperties.class})
 @ActiveProfiles("test")
 class ConferencesRestControllerTest {
 
@@ -43,25 +47,33 @@ class ConferencesRestControllerTest {
     private ConferencesService conferencesService;
 
     @Test
-    void addNewConferenceExpectedCreatedTest() throws Exception {
-        var request = new ConferenceRequest().name("Test1")
+    void addNewConferenceExpectedCreatedNewConferenceTest() throws Exception {
+        var request = new ConferenceRequest().name("Conf1")
                 .topic("Java")
                 .participants(101)
-                .dateStart(LocalDate.now()
-                        .toString())
+                .dateStart(LocalDate.now())
                 .dateEnd(LocalDate.now()
-                        .plusDays(3)
-                        .toString());
-        Mockito.when(conferencesService.addConference(Mockito.any()))
-                .thenReturn(1L);
+                        .plusDays(3));
+        long ID = 1L;
+        Mockito.when(conferencesService.saveConference(Mockito.any()))
+                .thenReturn(Conference.builder()
+                        .id(ID)
+                        .build());
 
         var content = objectMapper.writeValueAsString(request);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/conferences")
-                .content(content)
-                .contentType(MediaType.APPLICATION_JSON))
+        var responseAsString = mockMvc.perform(MockMvcRequestBuilders.post("/conferences")
+                        .content(content)
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status()
-                        .isCreated());
+                        .isCreated())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        Assertions.assertThat(objectMapper.readValue(responseAsString, ConferenceCreatedResponse.class))
+                .isNotNull()
+                .extracting(ConferenceCreatedResponse::getId)
+                .isEqualTo(ID);
     }
 
     @Test
@@ -69,41 +81,48 @@ class ConferencesRestControllerTest {
         var request = new ConferenceRequest().name("Test1")
                 .topic("Java")
                 .participants(99)
-                .dateStart(LocalDate.now()
-                        .toString())
+                .dateStart(LocalDate.now())
                 .dateEnd(LocalDate.now()
-                        .plusDays(3)
-                        .toString());
-        Mockito.when(conferencesService.addConference(Mockito.any()))
-                .thenReturn(1L);
+                        .plusDays(3));
 
         var content = objectMapper.writeValueAsString(request);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/conferences")
-                .content(content)
-                .contentType(MediaType.APPLICATION_JSON))
+        var responseContent = mockMvc.perform(MockMvcRequestBuilders.post("/conferences")
+                        .content(content)
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status()
-                        .isBadRequest());
+                        .isBadRequest())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        var errorResponse = objectMapper.readValue(responseContent, ErrorResponse.class);
+        Assertions.assertThat(errorResponse.getErrorMessage())
+                .isNotEmpty()
+                .contains("must be greater than or equal to 101");
     }
 
     @Test
     void addNewConferenceWithEmptyNameAndTopicExpectedBadRequestTest() throws Exception {
         var request = new ConferenceRequest().participants(111)
-                .dateStart(LocalDate.now()
-                        .toString())
+                .dateStart(LocalDate.now())
                 .dateEnd(LocalDate.now()
-                        .plusDays(3)
-                        .toString());
-        Mockito.when(conferencesService.addConference(Mockito.any()))
-                .thenReturn(1L);
+                        .plusDays(3));
 
         var content = objectMapper.writeValueAsString(request);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/conferences")
-                .content(content)
-                .contentType(MediaType.APPLICATION_JSON))
+        var responseContent = mockMvc.perform(MockMvcRequestBuilders.post("/conferences")
+                        .content(content)
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status()
-                        .isBadRequest());
+                        .isBadRequest())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        var errorResponse = objectMapper.readValue(responseContent, ErrorResponse.class);
+        Assertions.assertThat(errorResponse.getErrorMessage())
+                .isNotEmpty();
     }
 
     @Test
@@ -121,16 +140,32 @@ class ConferencesRestControllerTest {
 
     @Test
     void receiveAllConferencesWithEntirePeriodTrueTest() throws Exception {
-        Mockito.when(conferencesService.receiveConferences(Boolean.TRUE))
-                .thenReturn(List.of(Conference.builder()
+        var expected = LongStream.rangeClosed(1, 10)
+                .mapToObj(i -> Conference.builder()
+                        .id(i)
                         .dateStart(LocalDate.now())
                         .dateEnd(LocalDate.now())
-                        .build()));
+                        .build())
+                .toList();
+        Mockito.when(conferencesService.receiveConferences(Boolean.TRUE))
+                .thenReturn(expected);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/conferences")
-                .queryParam("entirePeriod", Boolean.TRUE.toString()))
+        String contentAsString = mockMvc.perform(MockMvcRequestBuilders.get("/conferences")
+                        .queryParam("entirePeriod", Boolean.TRUE.toString()))
                 .andExpect(MockMvcResultMatchers.status()
-                        .isOk());
+                        .isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        var actual = List.of(objectMapper.readValue(contentAsString, ConferenceResponse[].class));
+        Assertions.assertThat(actual)
+                .isNotEmpty()
+                .hasSize(10)
+                .extracting(ConferenceResponse::getId)
+                .containsAll(expected.stream()
+                        .map(Conference::getId)
+                        .toList());
     }
 
     @Test
@@ -138,11 +173,9 @@ class ConferencesRestControllerTest {
         var request = new ConferenceRequest().name("Test1")
                 .topic("Java")
                 .participants(101)
-                .dateStart(LocalDate.now()
-                        .toString())
+                .dateStart(LocalDate.now())
                 .dateEnd(LocalDate.now()
-                        .plusDays(3)
-                        .toString());
+                        .plusDays(3));
 
         var content = objectMapper.writeValueAsString(request);
 
@@ -151,18 +184,27 @@ class ConferencesRestControllerTest {
                 .updateConference(Mockito.any());
 
         mockMvc.perform(MockMvcRequestBuilders.put("/conferences/{conferenceId}", 1)
-                .content(content)
-                .contentType(MediaType.APPLICATION_JSON))
+                        .content(content)
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status()
                         .isNoContent());
     }
 
     @Test
-    void updateConferenceWithIdLessThan1ExpectedBadRequestTest() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.put("/conferences/{conferenceId}", 0)
-                .contentType(MediaType.APPLICATION_JSON))
+    void updateConferenceWithIdLessThanOneExpectedBadRequestTest() throws Exception {
+        var responseContent = mockMvc.perform(MockMvcRequestBuilders.put("/conferences/{conferenceId}", 0)
+                        .content("{}")
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status()
-                        .isBadRequest());
+                        .isBadRequest())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+
+        var errorResponse = objectMapper.readValue(responseContent, ErrorResponse.class);
+        Assertions.assertThat(errorResponse.getErrorMessage())
+                .isNotEmpty();
     }
 
     @Test
@@ -170,24 +212,30 @@ class ConferencesRestControllerTest {
         var request = new ConferenceRequest().name("Test1")
                 .topic("Java")
                 .participants(101)
-                .dateStart(LocalDate.now()
-                        .toString())
+                .dateStart(LocalDate.now())
                 .dateEnd(LocalDate.now()
-                        .plusDays(3)
-                        .toString());
+                        .plusDays(3));
 
         var content = objectMapper.writeValueAsString(request);
 
-        Mockito.doThrow(new ConferenceException("Conference With Id[" + 2342423 + "] Not Found", HttpStatus.NOT_FOUND))
+        var errorMessage = "Conference With Id[" + 2342423 + "] Not Found";
+        Mockito.doThrow(new ConferenceException(errorMessage, HttpStatus.NOT_FOUND))
                 .when(conferencesService)
                 .updateConference(Mockito.any());
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/conferences/{conferenceId}", 2342423)
-                .content(content)
-                .contentType(MediaType.APPLICATION_JSON))
+        var responseContent = mockMvc.perform(MockMvcRequestBuilders.put("/conferences/{conferenceId}", 2342423)
+                        .content(content)
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status()
-                        .isNotFound());
-    }
+                        .isNotFound())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
 
+        Assertions.assertThat(objectMapper.readValue(responseContent, ErrorResponse.class))
+                .isNotNull()
+                .extracting(ErrorResponse::getErrorMessage)
+                .isEqualTo(errorMessage);
+    }
 
 }

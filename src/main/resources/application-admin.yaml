@@ -1,0 +1,53 @@
+spring:
+  security:
+    user:
+      name: admin
+      password: admin
+      roles: ADMIN
+  application:
+    admin:
+      enabled: true
+  jmx:
+    enabled: true
+
+management:
+  tracing:
+    enabled: true
+    sampling:
+      probability: 1.0
+  endpoint:
+    env:
+      show-values: when_authorized
+    shutdown:
+      enabled: true
+    health:
+      show-details: always
+      show-components: always
+      probes:
+        enabled: true
+      group:
+        readiness:
+          include: readinessState, db
+    configprops:
+      show-values: when_authorized
+  endpoints:
+    jmx:
+      exposure:
+        include: '*'
+    web:
+      exposure:
+        include: '*'
+    enabled-by-default: true
+  info:
+    java:
+      enabled: true
+    env:
+      enabled: true
+    git:
+      mode: full
+    os:
+      enabled: true
+
+logging:
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"

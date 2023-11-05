@@ -10,6 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 import org.vt.conferences.dao.ConferenceDao;
 import org.vt.conferences.domain.Conference;
+import org.vt.conferences.service.validations.ValidationsService;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,7 +18,6 @@ import java.util.List;
 /**
  * @author Vlad Trofymets
  */
-//@SpringBootTest(classes = ConferencesServiceApplication.class)
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles("test")
 public class ConferencesServiceTest {
@@ -46,9 +46,9 @@ public class ConferencesServiceTest {
         Mockito.when(conferenceDao.save(Mockito.any()))
                 .thenReturn(expected);
 
-        var actual = conferencesService.addConference(expected);
+        var actual = conferencesService.saveConference(expected);
 
-        Assertions.assertThat(actual)
+        Assertions.assertThat(actual.getId())
                 .isNotNull()
                 .isEqualTo(expected.getId());
     }

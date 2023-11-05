@@ -1,13 +1,15 @@
 package org.vt.conferences.service;
 
-import conferences.api.dto.TalkRequest;
-import conferences.api.dto.TalkResponse;
+import lombok.NonNull;
+import org.vt.conferences.domain.Talk;
 
 import java.util.List;
 
 public interface TalksService {
 
-    void addTalkToConference(Long conferenceId, TalkRequest talk);
+    Talk addTalkToConference(@NonNull Talk talk);
 
-    List<TalkResponse> receiveConferenceTalks(Long id);
+    List<Talk> receiveConferenceTalks(@NonNull Long conferenceId);
+
+    Talk findTalk(@NonNull Long talkId);
 }
