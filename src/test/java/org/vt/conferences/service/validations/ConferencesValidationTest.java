@@ -11,6 +11,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.vt.conferences.dao.ConferenceDao;
 import org.vt.conferences.domain.Conference;
 import org.vt.conferences.exceptions.ConferenceException;
+import org.vt.conferences.service.validations.conference.ExistConferenceValidation;
+import org.vt.conferences.service.validations.conference.PeriodConferenceValidation;
+import org.vt.conferences.service.validations.conference.UniqueNameConferenceValidation;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -24,11 +27,11 @@ class ConferencesValidationTest {
     @Mock
     private ConferenceDao conferenceDao;
     @InjectMocks
-    private ConferenceExistValidation conferenceExistValidation;
+    private ExistConferenceValidation existConferenceValidation;
     @InjectMocks
-    private ConferencePeriodValidation conferencePeriodValidation;
+    private PeriodConferenceValidation periodConferenceValidation;
     @InjectMocks
-    private ConferenceUniqueNameValidation conferenceUniqueNameValidation;
+    private UniqueNameConferenceValidation uniqueNameConferenceValidation;
 
     @Test
     void conferenceExistValidationTest() {
@@ -36,17 +39,17 @@ class ConferencesValidationTest {
         Mockito.when(conferenceDao.existsById(conference.getId()))
                 .thenReturn(Boolean.FALSE);
 
-        checkThrowBy(() -> conferenceExistValidation.validate(conference));
+        checkThrowBy(() -> existConferenceValidation.validate(conference));
     }
 
     @Test
     void periodValidationTest() {
         var conference = conference(1L);
         Mockito.when(conferenceDao.checkOnExistPeriod(conference.getName(), conference.getDateStart(),
-                conference.getDateEnd()))
+                        conference.getDateEnd()))
                 .thenReturn(1);
 
-        checkThrowBy(() -> conferencePeriodValidation.validate(conference));
+        checkThrowBy(() -> periodConferenceValidation.validate(conference));
     }
 
     @Test
@@ -55,12 +58,14 @@ class ConferencesValidationTest {
         Mockito.when(conferenceDao.findByName(conference.getName()))
                 .thenReturn(Optional.of(conference));
 
-        checkThrowBy(() -> conferenceUniqueNameValidation.validate(conference));
+        checkThrowBy(() -> uniqueNameConferenceValidation.validate(conference));
     }
 
     private void checkThrowBy(ThrowableAssert.ThrowingCallable call) {
         Assertions.assertThatThrownBy(call)
-                .isInstanceOf(ConferenceException.class);
+                .isInstanceOf(ConferenceException.class)
+                .hasFieldOrProperty("code")
+                .hasFieldOrProperty("message");
     }
 
 

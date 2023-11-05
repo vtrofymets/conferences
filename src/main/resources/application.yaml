@@ -1,18 +1,23 @@
 server:
-  port: 9999
+  port: 8080
+  http2:
+    enabled: true
+  shutdown: graceful
 
 spring:
   application:
     name: conferences
+  profiles:
+    include: default, admin
   mvc:
     throw-exception-if-no-handler-found: true
   flyway:
     enabled: true
   datasource:
-    url: jdbc:h2:file:./db/conferences
-    username: conf
-    password: conf
-    driver-class-name: org.h2.Driver
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
     hikari:
       auto-commit: false
       minimum-idle: 1
@@ -23,12 +28,12 @@ spring:
       pool-name: conferences-db-cp
   jpa:
     generate-ddl: false
-    database-platform: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: validate
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.H2Dialect
+        dialect: org.hibernate.dialect.PostgreSQLDialect
         order_inserts: true
         order_updates: true
         batch_versioned_data: true
@@ -36,12 +41,18 @@ spring:
           batch_size: 20
           use_streams_for_binary: true
       open-in-view: false
-  h2:
-    console:
-      enabled: true
 
 springdoc:
   api-docs:
-    path: ${spring.application.name}/docs
+    enabled: true
+    path: ${spring.application.name}/v3/api-docs
+    version: openapi_3_1
   swagger-ui:
-    path: /${spring.application.name}/swagger-ui
+    enabled: true
+    path: ${spring.application.name}/swagger-ui
+    config-url: /${spring.application.name}/v3/api-docs/swagger-config
+    url: /${spring.application.name}/v3/api-docs
+
+management:
+  endpoints:
+    enabled-by-default: false

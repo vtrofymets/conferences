@@ -2,12 +2,12 @@ package org.vt.conferences.dao;
 
 import conferences.api.dto.TalkType;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.ContextConfiguration;
-import org.vt.conferences.ConferencesServiceApplication;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.vt.conferences.domain.Conference;
 import org.vt.conferences.domain.Talk;
 
@@ -16,8 +16,8 @@ import java.time.LocalDate;
 /**
  * @author Vlad Trofymets
  */
-@DataJpaTest
-@ContextConfiguration(classes = ConferencesServiceApplication.class)
+@SpringBootTest
+@ActiveProfiles("test")
 public class TalksDaoTest {
 
     public static final String TITLE = "TITLE";
@@ -40,6 +40,12 @@ public class TalksDaoTest {
                 .build());
 
         talksDao.save(talk(conference.getId()));
+    }
+
+    @AfterEach
+    void afterEach() {
+        talksDao.deleteAll();
+        conferenceDao.deleteAll();
     }
 
     @Test

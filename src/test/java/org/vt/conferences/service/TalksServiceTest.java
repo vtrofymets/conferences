@@ -1,7 +1,5 @@
 package org.vt.conferences.service;
 
-import conferences.api.dto.TalkRequest;
-import conferences.api.dto.TalkResponse;
 import conferences.api.dto.TalkType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -38,12 +36,15 @@ public class TalksServiceTest {
     void addTalkToConferenceTest() {
         var talk = talk();
 
-        var request = new TalkRequest().title(TITLE)
+        var request = Talk.builder()
+                .conferenceId(1L)
+                .title(TITLE)
                 .description(DESCRIPTION)
                 .speaker(SPEAKER)
-                .talkType(TalkType.MASTER_CLASS);
+                .type(TalkType.MASTER_CLASS)
+                .build();
 
-        talksService.addTalkToConference(1L, request);
+        talksService.addTalkToConference(request);
 
         Mockito.verify(talksDao)
                 .save(talk);
@@ -62,11 +63,13 @@ public class TalksServiceTest {
                 .isNotNull()
                 .isNotEmpty()
                 .hasSize(1)
-                .isEqualTo(List.of(new TalkResponse().title(TITLE)
-                        .talkType(TalkType.MASTER_CLASS)
+                .isEqualTo(List.of(Talk.builder()
+                        .title(TITLE)
+                        .type(TalkType.MASTER_CLASS)
                         .speaker(SPEAKER)
                         .conferenceId(id)
-                        .description(DESCRIPTION)));
+                        .description(DESCRIPTION)
+                        .build()));
     }
 
     private Talk talk() {

@@ -14,6 +14,9 @@ import org.vt.conferences.dao.TalksDao;
 import org.vt.conferences.domain.Conference;
 import org.vt.conferences.domain.Talk;
 import org.vt.conferences.exceptions.TalkException;
+import org.vt.conferences.service.validations.talk.SpeakerLimitTalkValidation;
+import org.vt.conferences.service.validations.talk.SubmissionTalkValidation;
+import org.vt.conferences.service.validations.talk.UniqueTitleTalkValidation;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -31,11 +34,11 @@ public class TalksValidationTest {
     @Mock
     private TalksDao talksDao;
     @InjectMocks
-    private SubmissionValidation submissionValidation;
+    private SubmissionTalkValidation submissionTalkValidation;
     @InjectMocks
-    private SpeakerLimitValidation speakerLimitValidation;
+    private SpeakerLimitTalkValidation speakerLimitValidation;
     @InjectMocks
-    private UniqueTitleValidation uniqueTitleValidation;
+    private UniqueTitleTalkValidation uniqueTitleTalkValidation;
 
     @Test
     void submissionValidationTest() {
@@ -43,7 +46,7 @@ public class TalksValidationTest {
         Mockito.when(conferenceDao.findById(ID))
                 .thenReturn(Optional.of(conference()));
 
-        checkThrowBy(() -> submissionValidation.validate(talk));
+        checkThrowBy(() -> submissionTalkValidation.validate(talk));
     }
 
     @Test
@@ -52,7 +55,7 @@ public class TalksValidationTest {
         Mockito.when(conferenceDao.findById(ID))
                 .thenReturn(Optional.of(conference2()));
 
-        submissionValidation.validate(talk);
+        submissionTalkValidation.validate(talk);
     }
 
     @Test
@@ -70,7 +73,7 @@ public class TalksValidationTest {
         Mockito.when(talksDao.existsByConferenceIdAndTitle(talk.getId(), talk.getTitle()))
                 .thenReturn(Boolean.TRUE);
 
-        checkThrowBy(() -> uniqueTitleValidation.validate(talk));
+        checkThrowBy(() -> uniqueTitleTalkValidation.validate(talk));
     }
 
     private void checkThrowBy(ThrowableAssert.ThrowingCallable call) {
@@ -106,7 +109,8 @@ public class TalksValidationTest {
                 .id(ID)
                 .name("NAME")
                 .topic("TOPIC")
-                .dateStart(LocalDate.now().plusMonths(1))
+                .dateStart(LocalDate.now()
+                        .plusMonths(1))
                 .dateEnd(LocalDate.now()
                         .plusMonths(2))
                 .participants(111)
