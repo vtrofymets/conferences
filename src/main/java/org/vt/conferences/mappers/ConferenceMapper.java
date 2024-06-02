@@ -20,6 +20,7 @@ public interface ConferenceMapper {
     @Mapping(target = "dateStart", source = "request.dateStart")
     @Mapping(target = "dateEnd", source = "request.dateEnd")
     @Mapping(target = "participants", source = "request.participants")
+    @Mapping(target = "talks", ignore = true)
     Conference map(Long id, ConferenceRequest request);
 
     ConferenceCreatedResponse mapCreatedConferenceResponse(Conference conference);

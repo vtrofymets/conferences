@@ -9,22 +9,18 @@ spring:
     name: conferences
   profiles:
     include: default, admin
-  mvc:
-    throw-exception-if-no-handler-found: true
   flyway:
     enabled: true
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
-    username: postgres
-    password: postgres
+    url: jdbc:postgresql://${DB_URL}:${DB_PORT}/conferences
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
     hikari:
       auto-commit: false
       minimum-idle: 1
       maximum-pool-size: 10
       connection-test-query: SELECT 1
-      data-source-properties:
-        cacheServerConfiguration: true
       pool-name: conferences-db-cp
   jpa:
     generate-ddl: false
@@ -45,14 +41,18 @@ spring:
 springdoc:
   api-docs:
     enabled: true
-    path: ${spring.application.name}/v3/api-docs
+    path: /${spring.application.name}/v3/api-docs
     version: openapi_3_1
   swagger-ui:
     enabled: true
-    path: ${spring.application.name}/swagger-ui
+    disable-swagger-default-url: true
+    path: /${spring.application.name}/swagger-ui
     config-url: /${spring.application.name}/v3/api-docs/swagger-config
     url: /${spring.application.name}/v3/api-docs
+  show-actuator: false
 
 management:
   endpoints:
     enabled-by-default: false
+
+debug: false

@@ -1,10 +1,16 @@
-FROM openjdk:17.0.2-slim as builder
-ARG JAR_FILE=target/*.jar
+FROM harbor.avalaunch.aval/infra-resources/maven-3.9.5:21.0.2 as maven
+WORKDIR /app
+COPY . /app/.
+RUN mvn -f /app/pom.xml clean package -Dmaven.test.skip=true -s /app/settings.xml
+
+FROM harbor.avalaunch.aval/docker-hub-proxy/openjdk:21-slim as builder
+COPY --from=maven /app/target/*.jar ./
+ARG JAR_FILE=/*.jar
 COPY ${JAR_FILE} conferences.jar
 RUN java -Djarmode=layertools -jar conferences.jar extract
 
 
-FROM openjdk:17.0.2-slim
+FROM harbor.avalaunch.aval/docker-hub-proxy/openjdk:21-slim
 VOLUME /tmp
 COPY --from=builder dependencies/ ./
 COPY --from=builder snapshot-dependencies/ ./
@@ -13,4 +19,4 @@ COPY --from=builder application/ ./
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]
+ENTRYPOINT ["java", "org.springframework.boot.loader.launch.JarLauncher"]

@@ -16,6 +16,8 @@ public interface TalkMapper {
     @Mapping(target = "description", source = "request.description")
     @Mapping(target = "speaker", source = "request.speaker")
     @Mapping(target = "type", source = "request.talkType")
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "conference", ignore = true)
     Talk map(Long confId, TalkRequest request);
 
     TalkResponse map(Talk talk);
