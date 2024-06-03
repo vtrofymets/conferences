@@ -1,4 +1,4 @@
 echo "Start docker containers shutdown"
-docker-compose down
+docker-compose stop
 
 docker ps

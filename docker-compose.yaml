@@ -8,6 +8,8 @@ services:
       - "8080:8080"
     environment:
 #      SPRING_DATASOURCE_URL: jdbc:postgresql://conferences-db:5432/conferences
+      SPRING_PROFILES_ACTIVE: default, admin
+      ADMIN_PASSWORD: admin
       DB_URL: conferences-db
       DB_USER: postgres
       DB_PASSWORD: postgres
