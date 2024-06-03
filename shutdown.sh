@@ -1,6 +1,4 @@
-echo "Start to shutdown"
-
-docker stop conferences-service
-docker stop conferences-postgres
+echo "Start docker containers shutdown"
+docker-compose down
 
 docker ps
