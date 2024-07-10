@@ -28,5 +28,14 @@ services:
       - "5433:5432"
     networks:
       - conferences-network
+  boot-admin:
+    image: boot-admin:latest
+    build:
+      context: ./boot-admin
+      dockerfile: Dockerfile
+    ports:
+      - "9090:9090"
+    networks:
+      - conferences-network
 networks:
   conferences-network:
