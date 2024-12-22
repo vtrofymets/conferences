@@ -1,0 +1,334 @@
+openapi: 3.0.1
+info:
+  title: Conferences API
+  description: Conferences Service
+  version: 1.0.0
+tags:
+  - name: conferences
+  - name: talks
+paths:
+  /conferences:
+    post:
+      description: Create new conference.
+      tags:
+        - conferences
+      operationId: createNewConference
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConferenceRequest'
+        required: true
+      responses:
+        '201':
+          description: Added conference
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConferenceCreatedResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    get:
+      description: Retrieve all available conferences.
+      tags:
+        - conferences
+      operationId: receiveAvailableConferences
+      parameters:
+        - in: query
+          name: entirePeriod
+          schema:
+            type: boolean
+            default: false
+          required: false
+          description: Receive conferences during all time period
+      responses:
+        '200':
+          description: List of conferences.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConferenceResponse'
+        '404':
+          description: NOT FOUND.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /conferences/{conferenceId}:
+    put:
+      description: Update conference.
+      tags:
+        - conferences
+      operationId: updateConference
+      parameters:
+        - name: conferenceId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+            nullable: false
+            minimum: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConferenceRequest'
+        required: true
+      responses:
+        204:
+          description: Conference Updated.
+        400:
+          description: BAD REQUEST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        404:
+          description: NOT FOUND
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    get:
+      description: Get conference by conferenceId.
+      tags:
+        - conferences
+      operationId: receiveConferenceByConferenceId
+      parameters:
+        - name: conferenceId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+            nullable: false
+            minimum: 1
+      responses:
+        200:
+          description: Get of conference.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConferenceResponse'
+        404:
+          description: NOT FOUND
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /conferences/{conferenceId}/talks:
+    post:
+      description: Add new talk to conference.
+      tags:
+        - talks
+      operationId: addNewTalk
+      parameters:
+        - name: conferenceId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+            nullable: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TalkRequest'
+        required: true
+      responses:
+        201:
+          description: Added new talk.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TalkCreatedResponse'
+        404:
+          description: NOT FOUND
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    get:
+      description: List of talks by conferenceId.
+      tags:
+        - talks
+      operationId: receiveTalksByConferenceId
+      parameters:
+        - name: conferenceId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+            nullable: false
+            minimum: 1
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TalkResponse'
+        404:
+          description: NOT FOUND
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /conferences/talks/{talkId}:
+    get:
+      description: Get talk by id.
+      tags:
+        - talks
+      operationId: receiveTalkById
+      parameters:
+        - name: talkId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+            nullable: false
+            minimum: 1
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TalkResponse'
+        404:
+          description: NOT FOUND
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    ConferenceRequest:
+      type: object
+      required:
+        - name
+        - topic
+        - dateStart
+        - dateEnd
+        - participants
+      properties:
+        name:
+          $ref: '#/components/schemas/nonEmptyString'
+        topic:
+          $ref: '#/components/schemas/nonEmptyString'
+        dateStart:
+          type: string
+          format: date
+          nullable: false
+          example: "2022-01-29"
+        dateEnd:
+          type: string
+          format: date
+          nullable: false
+          example: "2022-01-30"
+        participants:
+          type: integer
+          format: int32
+          nullable: false
+          minimum: 101
+    ConferenceCreatedResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          nullable: false
+    ConferenceResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        topic:
+          type: string
+        dateStart:
+          type: string
+          format: date
+          example: "2022-01-29"
+        dateEnd:
+          type: string
+          format: date
+          example: "2022-01-30"
+        participants:
+          type: integer
+          format: int32
+    TalkRequest:
+      type: object
+      required:
+        - title
+        - description
+        - speaker
+        - talkType
+      properties:
+        title:
+          $ref: '#/components/schemas/nonEmptyString'
+        description:
+          $ref: '#/components/schemas/nonEmptyString'
+        speaker:
+          $ref: '#/components/schemas/nonEmptyString'
+        talkType:
+          $ref: '#/components/schemas/TalkType'
+    TalkResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        conferenceId:
+          type: integer
+          format: int64
+        title:
+          type: string
+        description:
+          type: string
+        speaker:
+          type: string
+        talkType:
+          $ref: '#/components/schemas/TalkType'
+    TalkType:
+      type: string
+      nullable: false
+      enum:
+        - REPORT
+        - MASTER_CLASS
+        - WORKSHOP
+    nonEmptyString:
+      type: string
+      nullable: false
+      minLength: 1
+    positiveInteger:
+      type: integer
+      format: int32
+      nullable: false
+      minimum: 1
+    ErrorResponse:
+      type: object
+      properties:
+        errorMessage:
+          type: string
+    TalkCreatedResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64

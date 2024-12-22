@@ -1,6 +1,6 @@
 FROM harbor.avalaunch.aval/infra-resources/maven-3.9.5:21.0.2 as maven
 WORKDIR /app
-COPY . /app/.
+COPY .. /app/.
 RUN mvn -f /app/pom.xml clean package -Dmaven.test.skip=true -s /app/settings.xml
 RUN ls
 

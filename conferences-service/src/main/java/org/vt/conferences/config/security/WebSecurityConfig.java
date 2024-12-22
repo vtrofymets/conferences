@@ -33,7 +33,8 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http, WebEndpointProperties webEndpointProperties,
             SecurityProperties securityProperties) throws Exception {
         return http.authorizeHttpRequests(
-                        requests -> requests.requestMatchers(webEndpointProperties.getBasePath() + "/**")
+                        requests -> requests
+                                .requestMatchers(webEndpointProperties.getBasePath() + "/**")
                                 .permitAll()
                                 .requestMatchers(webEndpointProperties.getBasePath() + "/**")
                                 .hasRole("ADMIN")

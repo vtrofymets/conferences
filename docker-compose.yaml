@@ -3,7 +3,7 @@ services:
     image: conferences-service:latest
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: conferences-service/Dockerfile
     ports:
       - "8080:8080"
     environment:
@@ -31,8 +31,8 @@ services:
   boot-admin:
     image: boot-admin:latest
     build:
-      context: ./boot-admin
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: boot-admin/Dockerfile
     ports:
       - "9090:9090"
     networks:

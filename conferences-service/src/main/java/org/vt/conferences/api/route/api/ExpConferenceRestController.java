@@ -1,11 +1,11 @@
-package org.vt.conferences.api.test.api;
+package org.vt.conferences.api.route.api;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.function.RouterFunction;
 import org.springframework.web.servlet.function.RouterFunctions;
 import org.springframework.web.servlet.function.ServerResponse;
-import org.vt.conferences.api.test.service.ExpConferenceService;
+import org.vt.conferences.api.route.service.ExpConferenceService;
 
 @Configuration
 public class ExpConferenceRestController {

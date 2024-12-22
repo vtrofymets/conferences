@@ -1,0 +1,31 @@
+server:
+  port: 9090
+
+spring:
+  application:
+    name: boot-admin
+  cloud:
+    discovery:
+      client:
+        simple:
+          instances:
+            boot-admin:
+              - host: localhost
+                port: 9090
+                secure: false
+                metadata:
+                  management.context-path: /actuator
+            conference-service:
+              - host: localhost
+                port: 8080
+                secure: false
+                metadata:
+                  management.context-path: /actuator
+              - host: conferences-service
+                port: 8080
+                secure: false
+                metadata:
+                  management.context-path: /actuator
+
+
+
